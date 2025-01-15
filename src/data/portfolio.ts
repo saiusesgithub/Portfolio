@@ -1,9 +1,9 @@
 // Placeholder data for portfolio
 export const siteData = {
   name: "SAI SRUJAN",
-  title: "Full-Stack Developer & Designer",
+  title: "Cloud Engineer & DevOps Practitioner",
   tagline: "Building Digital Infrastructure.",
-  about: "I craft scalable web applications with clean code and uncompromising design. Specializing in modern JavaScript frameworks and system architecture.",
+  about: "Architecting cloud systems, automating CI/CD pipelines, and building the infrastructure that ships software at scale.",
   email: "saisrujanpunati@gmail.com",
   location: "Hyderabad, India",
   coordinates: "17.3850° N, 78.4867° E",

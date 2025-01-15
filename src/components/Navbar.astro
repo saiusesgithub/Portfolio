@@ -9,10 +9,12 @@ const navLinks = [
 
 // Split name into individual characters for slot machine animation
 const nameChars = siteData.name.split('');
-// Identify first letter of each word (index 0, or preceded by space)
-const isFirstLetter = nameChars.map((char, i) => {
+// Split into words - first word default color, second word orange
+const nameParts = siteData.name.split(' ');
+const firstWordEnd = nameParts[0].length; // index where first word ends
+const isSecondWord = nameChars.map((char, i) => {
   if (char === ' ') return false;
-  return i === 0 || nameChars[i - 1] === ' ';
+  return i > firstWordEnd;
 });
 ---
 
@@ -27,7 +29,7 @@ const isFirstLetter = nameChars.map((char, i) => {
         >
           {nameChars.map((char, i) => (
             <span
-              class={`nav-char inline-block relative overflow-hidden ${isFirstLetter[i] ? 'text-safety-orange' : ''}`}
+              class={`nav-char inline-block relative overflow-hidden ${isSecondWord[i] ? 'text-safety-orange' : ''}`}
               data-index={String(i)}
               data-char={char}
               style="height: 1.2em; line-height: 1.2em;"

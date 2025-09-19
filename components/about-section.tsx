@@ -31,8 +31,7 @@ export function AboutSection() {
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-gradient">About Me</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty">
-            I'm a passionate full-stack developer with 5+ years of experience building web applications that solve
-            real-world problems. I love turning complex challenges into simple, beautiful solutions.
+            I'm Sai Srujan Punati, a full-stack developer building apps today while architecting the cloud for tomorrow. With 5+ years of experience solving real-world problems, I love turning complex challenges into simple, beautiful solutions.
           </p>
         </div>
 

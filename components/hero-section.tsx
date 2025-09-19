@@ -95,7 +95,7 @@ export function HeroSection() {
                 transform: `perspective(1000px) rotateX(${mousePosition.y * 2}deg) rotateY(${mousePosition.x * 2}deg)`,
               }}
             >
-              Hi, I'm <span className="text-gradient hero-name-glow">Alex Chen</span>
+              Hi, I'm <span className="text-gradient hero-name-glow">Sai Srujan Punati</span>
             </h1>
             <p
               className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto text-pretty hero-subtitle-3d"
@@ -103,7 +103,7 @@ export function HeroSection() {
                 transform: `perspective(800px) rotateX(${mousePosition.y * 1}deg) rotateY(${mousePosition.x * 1}deg)`,
               }}
             >
-              Full Stack Developer crafting digital experiences with modern technologies and creative solutions
+              Building apps today. Architecting the cloud tomorrow.
             </p>
           </div>
 
@@ -152,3 +152,4 @@ export function HeroSection() {
     </section>
   )
 }
+

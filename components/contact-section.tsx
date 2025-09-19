@@ -35,8 +35,8 @@ export function ContactSection() {
     {
       icon: Mail,
       title: "Email",
-      value: "alex.chen@example.com",
-      href: "mailto:alex.chen@example.com",
+      value: "hello@saisrujanpunati.com",
+      href: "mailto:hello@saisrujanpunati.com",
     },
     {
       icon: Phone,

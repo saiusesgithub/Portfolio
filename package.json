@@ -2,16 +2,11 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://saiusesgithub.github.io/Portfolio",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start",
-    "export": "next export",
-    "copy:cname": "node -e \"const fs=require('fs'); if(fs.existsSync('CNAME')){fs.mkdirSync('out',{recursive:true}); fs.copyFileSync('CNAME','out/CNAME');}\"",
-    "predeploy": "npm run build && npm run copy:cname",
-    "deploy": "gh-pages -d out"
+    "start": "next start"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",

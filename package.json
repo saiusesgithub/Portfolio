@@ -9,8 +9,8 @@
     "lint": "next lint",
     "start": "next start",
     "export": "next export",
-    "copy:cname": "cp CNAME out/CNAME || copy CNAME out\\CNAME",
-    "predeploy": "npm run build && npm run export && npm run copy:cname",
+    "copy:cname": "node -e \"const fs=require('fs'); if(fs.existsSync('CNAME')){fs.mkdirSync('out',{recursive:true}); fs.copyFileSync('CNAME','out/CNAME');}\"",
+    "predeploy": "npm run build && npm run copy:cname",
     "deploy": "gh-pages -d out"
   },
   "dependencies": {

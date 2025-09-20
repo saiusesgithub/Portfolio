@@ -31,7 +31,7 @@ export function AboutSection() {
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-gradient">About Me</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty">
-            I'm Sai Srujan Punati, a full-stack developer building apps today while architecting the cloud for tomorrow. With 5+ years of experience solving real-world problems, I love turning complex challenges into simple, beautiful solutions.
+            I'm Sai Srujan Punati, a B.Tech IT student passionate about Flutter app development and currently diving into cloud technologies. I love creating smooth, user-friendly apps and exploring how the cloud can make them scalable and reliable. With a strong project-driven mindset, I plan to explore blockchain and cybersecurity in the future.
           </p>
         </div>
 

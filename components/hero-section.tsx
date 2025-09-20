@@ -127,9 +127,9 @@ export function HeroSection() {
 
           <div className="flex justify-center space-x-6 pt-8">
             {[
-              { icon: Github, href: "#", label: "GitHub" },
-              { icon: Linkedin, href: "#", label: "LinkedIn" },
-              { icon: Mail, href: "#", label: "Email" },
+              { icon: Github, href: "https://github.com/saiusesgithub", label: "GitHub" },
+              { icon: Linkedin, href: "https://in.linkedin.com/in/saisrujanpunati", label: "LinkedIn" },
+              { icon: Mail, href: "mailto:saisrujanpuanti@gmail.com", label: "Email" },
             ].map(({ icon: Icon, href, label }) => (
               <a
                 key={label}

@@ -35,19 +35,19 @@ export function ContactSection() {
     {
       icon: Mail,
       title: "Email",
-      value: "hello@saisrujanpunati.com",
-      href: "mailto:hello@saisrujanpunati.com",
+      value: "saisrujanpunati@gmail.com",
+      href: "mailto:saisrujanpunati@gmail.com",
     },
     {
       icon: Phone,
       title: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
+      value: "+91 75697 99199",
+      href: "tel:+917569799199",
     },
     {
       icon: MapPin,
       title: "Location",
-      value: "San Francisco, CA",
+      value: "Hyderabad",
       href: "#",
     },
   ]

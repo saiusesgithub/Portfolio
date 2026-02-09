@@ -4,6 +4,7 @@ interface Props {
 }
 
 const { title } = Astro.props;
+import TargetCursor from '../components/TargetCursor';
 ---
 
 <!doctype html>
@@ -16,13 +17,38 @@ const { title } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <script>
+      // Load Lucide icons with fallback CDN if primary fails (avoids 404 in some environments)
+      (function() {
+        var primary = 'https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/lucide.min.js';
+        var fallback = 'https://unpkg.com/lucide@0.263.1/dist/lucide.min.js';
+        function load(src: string) {
+          var s = document.createElement('script');
+          s.src = src;
+          s.async = false;
+          s.onload = function() { console.log('Loaded lucide from', src); };
+          s.onerror = function() {
+            if (src !== fallback) {
+              console.warn('Failed to load lucide from', src, ' — trying fallback');
+              load(fallback);
+            } else {
+              console.error('Failed to load lucide from all CDNs');
+            }
+          };
+          document.head.appendChild(s);
+        }
+        if (typeof document !== 'undefined') load(primary);
+      })();
+    </script>
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body class="antialiased selection:bg-safety-orange selection:text-white">
     <!-- The Grain -->
     <div class="noise-overlay"></div>
+    
+    <!-- Target Cursor Effect (client-only to avoid SSR issues) -->
+    <TargetCursor client:only="react" spinDuration={3.5} hideDefaultCursor={false} parallaxOn={true} hoverDuration={0.5} />
     
     <slot />
     
@@ -50,7 +76,16 @@ const { title } = Astro.props;
     color: var(--text-rebar);
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
-    cursor: crosshair;
+    cursor: none !important;
+  }
+  
+  /* Force hide cursor on all elements */
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+  
+  a, button, input, textarea, select {
+    cursor: none !important;
   }
   
   /* The Grain - Analog Noise */

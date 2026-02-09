@@ -8,7 +8,7 @@ import { experience } from '../data/portfolio';
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
     {experience.map((exp, index) => (
-      <div class={`relative h-auto min-h-[300px] p-8 group bg-concrete hover:bg-white transition-colors duration-0 ${index < experience.length - 1 ? 'border-beam-b lg:border-b-0 lg:border-beam-r' : ''}`}>
+      <div class={`cursor-target relative h-auto min-h-[300px] p-8 group bg-concrete hover:bg-white transition-colors duration-0 ${index < experience.length - 1 ? 'border-beam-b lg:border-b-0 lg:border-beam-r' : ''}`}>
         <div class="font-tech text-xs text-safety-orange mb-2 uppercase tracking-widest">
           {exp.period}
         </div>

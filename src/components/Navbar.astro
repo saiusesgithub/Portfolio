@@ -26,14 +26,14 @@ const navLinks = [
       {navLinks.map(link => (
         <a 
           href={link.href} 
-          class="h-full flex items-center px-8 hover:bg-black hover:text-white transition-colors duration-0 border-l-2 border-black"
+          class="cursor-target h-full flex items-center px-8 hover:bg-black hover:text-white transition-colors duration-0 border-l-2 border-black"
         >
           [{link.id}] {link.name}
         </a>
       ))}
       <a 
         href="#contact" 
-        class="h-full flex items-center px-8 bg-safety-orange text-white hover:bg-black transition-colors duration-0 font-bold border-l-2 border-black"
+        class="cursor-target h-full flex items-center px-8 bg-safety-orange text-white hover:bg-black transition-colors duration-0 font-bold border-l-2 border-black"
       >
         <i data-lucide="mail" class="w-4 h-4 mr-2"></i> Contact
       </a>

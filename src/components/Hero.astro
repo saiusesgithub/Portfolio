@@ -57,28 +57,51 @@ import { siteData } from '../data/portfolio';
   </div>
 </section>
 
-<script>
+<script is:inline>
   // Generate 100 squares (10x10 grid) for interactive reveal effect
-  const gridContainer = document.getElementById('grid-overlay');
-  
-  if (gridContainer) {
-    const totalSquares = 100;
-
-    for (let i = 0; i < totalSquares; i++) {
-      const square = document.createElement('div');
-      square.className = 'grid-square';
+  (function() {
+    function initGridOverlay() {
+      const gridContainer = document.getElementById('grid-overlay');
       
-      // Mouse hover interaction
-      square.addEventListener('mouseover', function() {
-        this.classList.add('fade-out');
-      });
+      if (!gridContainer) {
+        console.warn('Grid overlay container not found');
+        return;
+      }
+      
+      // Clear any existing squares (in case of re-run)
+      gridContainer.innerHTML = '';
+      
+      const totalSquares = 100;
 
-      // Touch support for mobile devices
-      square.addEventListener('touchstart', function() {
-        this.classList.add('fade-out');
-      }, { passive: true });
+      for (let i = 0; i < totalSquares; i++) {
+        const square = document.createElement('div');
+        square.className = 'grid-square';
+        
+        // Mouse hover interaction
+        square.addEventListener('mouseover', function() {
+          this.classList.add('fade-out');
+        });
 
-      gridContainer.appendChild(square);
+        // Touch support for mobile devices
+        square.addEventListener('touchstart', function() {
+          this.classList.add('fade-out');
+        }, { passive: true });
+
+        gridContainer.appendChild(square);
+      }
+      
+      console.log('Grid overlay initialized with', totalSquares, 'squares');
     }
-  }
+
+    // Multiple strategies to ensure it runs
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGridOverlay);
+    } else if (document.readyState === 'interactive') {
+      // DOM is ready but resources still loading
+      requestAnimationFrame(initGridOverlay);
+    } else {
+      // DOM and resources are ready
+      initGridOverlay();
+    }
+  })();
 </script>

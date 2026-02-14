@@ -1,191 +1,237 @@
 ---
 import { siteData, socialLinks } from '../data/portfolio';
 
+const linkedinUrl = socialLinks.find(s => s.name === 'LinkedIn')?.url ?? 'https://linkedin.com/in/saisrujanpunati';
+const githubUrl   = socialLinks.find(s => s.name === 'GitHub')?.url  ?? 'https://github.com/saiusesgithub';
+const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(linkedinUrl)}&bgcolor=080808&color=ff4500&margin=4`;
+
 const navLinks = [
-  { name: 'About', href: '#about' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Experience', href: '#experience' },
-  { name: 'Projects', href: '#projects' },
+  { id: '01', name: 'About', href: '#about' },
+  { id: '02', name: 'Skills', href: '#skills' },
+  { id: '03', name: 'Experience', href: '#experience' },
+  { id: '04', name: 'Projects', href: '#projects' },
 ];
 
 const marqueeText = 'CLOUD ENGINEER  ✦  DEVOPS PRACTITIONER  ✦  OPEN SOURCE CONTRIBUTOR  ✦  CI/CD ARCHITECT  ✦  BUILDING PIPELINES  ✦  DEPLOYING AT SCALE  ✦  BUILDING DIGITAL INFRASTRUCTURE  ✦  ';
-// Repeat 4 times for seamless loop
 const marqueeRepeat = Array(4).fill(marqueeText).join('');
 ---
 
-<footer id="contact" class="bg-black text-concrete w-full relative overflow-hidden">
+<footer id="contact" class="bg-black text-white w-full relative overflow-hidden">
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- MARQUEE TICKER -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="border-b border-[#333] overflow-hidden py-4 bg-safety-orange text-black">
-    <div class="marquee-track whitespace-nowrap font-extrabold text-sm lg:text-base uppercase tracking-widest">
+  <!-- ══════════════════════════════════════ -->
+  <!-- CAUTION TAPE TOP BORDER               -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="w-full h-5 bg-[repeating-linear-gradient(45deg,#000,#000_10px,#ff4500_10px,#ff4500_20px)] border-b-4 border-black"></div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- MARQUEE TICKER (Upgraded)             -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="border-t-4 border-b-4 border-black overflow-hidden py-3 bg-black">
+    <div class="marquee-track whitespace-nowrap font-extrabold text-sm lg:text-base uppercase tracking-widest text-safety-orange">
       <span class="marquee-content inline-block">{marqueeRepeat}</span>
       <span class="marquee-content inline-block" aria-hidden="true">{marqueeRepeat}</span>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- GIANT NAME WATERMARK -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden" aria-hidden="true">
-    <span 
-      class="text-[8rem] lg:text-[16rem] font-extrabold uppercase tracking-tight whitespace-nowrap"
-      style="opacity: 0.03; line-height: 1;"
-    >{siteData.name}</span>
+  <!-- ══════════════════════════════════════ -->
+  <!-- SCANLINE OVERLAY                      -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="absolute inset-0 pointer-events-none z-0 opacity-[0.03]"
+    style="background-image: repeating-linear-gradient(transparent, transparent 2px, #fff 2px, #fff 4px);">
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- MAIN CONTENT -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2">
+  <!-- ══════════════════════════════════════ -->
+  <!-- MAIN CONTENT GRID                     -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 border-b-4 border-[#222]">
 
-    <!-- LEFT: CTA + Actions -->
-    <div class="p-8 lg:p-16 border-b lg:border-b-0 lg:border-r border-[#333]">
-      
+    <!-- ━━ LEFT: CTA + Buttons + Socials ━━ -->
+    <div class="p-8 lg:p-14 border-b-4 lg:border-b-0 lg:border-r-4 border-[#222] flex flex-col">
+
       <!-- CTA Headline -->
       <div class="mb-10">
-        <p class="font-tech text-xs text-safety-orange uppercase tracking-widest mb-4">// Contact</p>
-        <h2 class="text-4xl lg:text-6xl font-extrabold uppercase tracking-tight-custom leading-[0.9] mb-2">
-          Enough<br />Scrolling.
+        <p class="font-tech text-xs text-safety-orange uppercase tracking-widest mb-5 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-safety-orange rounded-full animate-pulse"></span>
+          // 04_CONTACT_MODULE
+        </p>
+        <h2 class="text-4xl lg:text-6xl font-black uppercase tracking-tight leading-[0.88] mb-2 text-white">
+          ENOUGH<br />SCROLLING<span class="text-safety-orange">.</span>
         </h2>
-        <h2 class="text-4xl lg:text-6xl font-extrabold uppercase tracking-tight-custom leading-[0.9] text-safety-orange">
-          Let's Build<br />Something<br />Together.
+        <h2 class="text-4xl lg:text-6xl font-black uppercase tracking-tight leading-[0.88] text-safety-orange">
+          LET'S BUILD<br />SOMETHING<br />TOGETHER<span class="text-white">.</span>
         </h2>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 mb-10">
-        <!-- Email Button -->
-        <a 
+      <div class="flex flex-col sm:flex-row gap-5 mb-10">
+        <!-- Email -->
+        <a
           href={`mailto:${siteData.email}`}
-          class="cursor-target flex items-center justify-center gap-3 border-2 border-[#555] px-8 py-4 font-bold uppercase tracking-wider text-sm hover:border-safety-orange hover:bg-safety-orange hover:text-black transition-colors duration-0 group"
+          class="cursor-target group flex items-center justify-center gap-3 border-2 border-white text-white px-7 py-4 font-black uppercase tracking-wider text-sm shadow-[5px_5px_0_0_#ff4500] hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-0"
         >
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect width="20" height="16" x="2" y="4" rx="2"/>
             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
           </svg>
-          Get In Touch
+          GET IN TOUCH
         </a>
 
         <!-- Resume Download -->
-        <a 
+        <a
           href="/resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          class="cursor-target flex items-center justify-center gap-3 bg-safety-orange text-black px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-white transition-colors duration-0 group"
+          class="cursor-target group flex items-center justify-center gap-3 bg-safety-orange border-2 border-safety-orange text-black px-7 py-4 font-black uppercase tracking-wider text-sm shadow-[5px_5px_0_0_#fff] hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] transition-all duration-0"
         >
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" x2="12" y1="15" y2="3"/>
           </svg>
-          Download CV
+          DOWNLOAD CV
         </a>
       </div>
 
-      <!-- Social Links -->
-      <div class="flex gap-4" id="social-links">
+      <!-- Social Icons as Blocky Keys -->
+      <div class="flex gap-3" id="social-links">
         {socialLinks.map((social) => (
-          <a 
-            href={social.url} 
+          <a
+            href={social.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="cursor-target social-magnetic flex items-center border border-[#555] hover:border-safety-orange hover:bg-safety-orange hover:text-black transition-all duration-200 group"
-            data-social={social.name}
+            class="cursor-target group flex flex-col items-center justify-center w-14 h-14 border-2 border-[#444] bg-[#111] text-white shadow-[3px_3px_0_0_#ff4500] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] hover:bg-safety-orange hover:text-black hover:border-safety-orange transition-all duration-0"
+            title={social.name}
           >
-            <div class="p-4">
-              {social.name === 'GitHub' && (
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-              )}
-              {social.name === 'LinkedIn' && (
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              )}
-            </div>
-            <span class="social-label inline-block max-w-0 overflow-hidden group-hover:max-w-[140px] transition-all duration-300 ease-out whitespace-nowrap text-xs font-bold uppercase tracking-wider pr-0 group-hover:pr-4 opacity-0 group-hover:opacity-100">
-              {social.name} →
-            </span>
+            {social.name === 'GitHub' && (
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            )}
+            {social.name === 'LinkedIn' && (
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            )}
+            <span class="font-tech text-[8px] uppercase mt-1 tracking-wider opacity-50 group-hover:opacity-100">{social.name.slice(0,2)}</span>
           </a>
         ))}
       </div>
+
     </div>
 
-    <!-- RIGHT: Info + Nav Links -->
-    <div class="p-8 lg:p-16 flex flex-col justify-between">
-      
-      <!-- Quick Links + Info Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
-        
-        <!-- Quick Navigation -->
-        <div>
-          <h4 class="font-tech text-xs text-gray-500 uppercase tracking-widest mb-5">Navigation</h4>
-          <ul class="space-y-3">
-            {navLinks.map(link => (
-              <li>
-                <a 
-                  href={link.href}
-                  class="cursor-target text-sm uppercase font-bold tracking-wider hover:text-safety-orange transition-colors duration-0 flex items-center gap-2 group py-2 pr-4"
-                >
-                  <span class="w-4 h-[2px] bg-gray-600 group-hover:bg-safety-orange group-hover:w-8 transition-all duration-200"></span>
-                  {link.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <!-- ━━ RIGHT: Nav + Recon Card + Stickers ━━ -->
+    <div class="p-8 lg:p-14 flex flex-col justify-between relative overflow-hidden">
 
-        <!-- Contact Info -->
-        <div class="space-y-6">
-          <div>
-            <h4 class="font-tech text-xs text-gray-500 uppercase tracking-widest mb-3">Location</h4>
-            <p class="uppercase font-bold text-sm">{siteData.location}</p>
-            <p class="font-tech text-[10px] text-gray-500 mt-1">{siteData.coordinates}</p>
+      <!-- Sticker Cluster -->
+      <div class="absolute top-6 right-6 flex flex-col gap-2 z-20 pointer-events-none select-none">
+        <div class="border-2 border-safety-orange bg-black text-safety-orange px-3 py-1 font-black text-[10px] uppercase tracking-wider transform rotate-[6deg] shadow-[2px_2px_0_0_#ff4500]">
+          ⚡ AVAILABLE: NOW
+        </div>
+        <div class="border-2 border-white bg-black text-white px-3 py-1 font-black text-[10px] uppercase tracking-wider transform -rotate-[4deg] shadow-[2px_2px_0_0_#fff] self-end">
+          // OPEN_TO_WORK
+        </div>
+        <div class="border-2 border-[#444] bg-safety-orange text-black px-3 py-1 font-black text-[10px] uppercase tracking-wider transform rotate-[2deg] shadow-[2px_2px_0_0_#000]">
+          CLOUD_NATIVE ✓
+        </div>
+      </div>
+
+      <!-- Numbered Nav Spec List -->
+      <div class="mb-10 mt-16 lg:mt-0">
+        <h4 class="font-tech text-[10px] text-[#555] uppercase tracking-[0.3em] mb-4">// NAV_INDEX</h4>
+        <ul class="divide-y-2 divide-[#1a1a1a]">
+          {navLinks.map(link => (
+            <li>
+              <a
+                href={link.href}
+                class="cursor-target group flex items-center justify-between py-3 pr-2 hover:bg-[#111] transition-colors duration-0"
+              >
+                <div class="flex items-center gap-4">
+                  <span class="font-tech text-[10px] text-[#444] group-hover:text-safety-orange transition-colors duration-0 tracking-widest">[{link.id}]</span>
+                  <span class="font-black text-base uppercase tracking-wider text-white group-hover:text-safety-orange transition-colors duration-0">{link.name}</span>
+                </div>
+                <span class="font-mono text-safety-orange text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-0">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Military Recon Card -->
+      <div class="border-2 border-[#333] p-4 font-mono bg-[#080808] relative">
+        <!-- Corner brackets -->
+        <div class="absolute top-1 left-1 w-3 h-3 border-t border-l border-safety-orange"></div>
+        <div class="absolute top-1 right-1 w-3 h-3 border-t border-r border-safety-orange"></div>
+        <div class="absolute bottom-1 left-1 w-3 h-3 border-b border-l border-safety-orange"></div>
+        <div class="absolute bottom-1 right-1 w-3 h-3 border-b border-r border-safety-orange"></div>
+
+        <div class="text-[9px] text-[#444] uppercase tracking-[0.3em] mb-3">// POSITION_DATA</div>
+
+        <div class="flex gap-4 items-start">
+          <!-- Left: Data grid -->
+          <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[11px] flex-1">
+            <div><span class="text-[#555]">LOCATION</span></div>
+            <div class="text-white font-bold">{siteData.location}</div>
+            <div><span class="text-[#555]">LAT</span></div>
+            <div class="text-safety-orange">17.3850° N</div>
+            <div><span class="text-[#555]">LON</span></div>
+            <div class="text-safety-orange">78.4867° E</div>
+            <div><span class="text-[#555]">TZ</span></div>
+            <div class="text-white">IST +05:30</div>
+            <div><span class="text-[#555]">EMAIL</span></div>
+            <div class="col-span-1">
+              <a href={`mailto:${siteData.email}`} class="text-white hover:text-safety-orange transition-colors duration-0 break-all text-[10px]">{siteData.email}</a>
+            </div>
           </div>
-          <div>
-            <h4 class="font-tech text-xs text-gray-500 uppercase tracking-widest mb-3">Email</h4>
-            <a 
-              href={`mailto:${siteData.email}`}
-              class="cursor-target text-sm font-bold hover:text-safety-orange transition-colors duration-0 break-all"
-            >
-              {siteData.email}
-            </a>
+
+          <!-- Right: QR Code -->
+          <div class="shrink-0 flex flex-col items-center gap-1">
+            <div class="border border-[#333] p-1 bg-[#080808]">
+              <img
+                src={qrUrl}
+                alt="LinkedIn QR Code"
+                width="80"
+                height="80"
+                class="block"
+                loading="lazy"
+              />
+            </div>
+            <span class="font-tech text-[8px] text-[#444] uppercase tracking-widest">LI_SCAN</span>
           </div>
         </div>
       </div>
 
-      <!-- Bottom Bar -->
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center pt-6 border-t border-[#333] font-tech text-[10px] uppercase text-gray-600 gap-2">
-        <div>© {new Date().getFullYear()} {siteData.name}. All rights reserved.</div>
-        <div class="flex items-center gap-1">
-          Built with
-          <span class="text-safety-orange font-bold">ASTRO</span>
-          +
-          <span class="text-safety-orange font-bold">GSAP</span>
-        </div>
-      </div>
     </div>
   </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- BOTTOM STATUS BAR                     -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="relative z-10 px-8 lg:px-14 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 font-tech text-[10px] uppercase tracking-widest text-[#444]">
+    <div class="flex items-center gap-2">
+      <span class="text-[#333]">[PROCESS_COMPLETE]</span>
+      <span>©{new Date().getFullYear()} {siteData.name}</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span>BUILD: <span class="text-[#666]">ASTRO + GSAP</span></span>
+      <span class="text-[#222]">|</span>
+      <span>STATUS: <span class="text-green-600">DEPLOYED</span></span>
+      <span class="text-[#222]">|</span>
+      <span>EXIT_CODE: <span class="text-safety-orange">0</span></span>
+    </div>
+  </div>
+
 </footer>
 
 <style is:global>
-  /* ──── Marquee Animation ──── */
   .marquee-track {
     display: flex;
     animation: marquee-scroll 45s linear infinite;
   }
-  
   .marquee-track:hover {
     animation-play-state: paused;
   }
-
   @keyframes marquee-scroll {
-    0% { transform: translateX(0); }
+    0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
-
 </style>
-

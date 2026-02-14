@@ -1,6 +1,8 @@
 # AURA PORTFOLIO — IMPLEMENTATION IDEAS ROADMAP
 Industrial Brutalist Interactive Portfolio Enhancement Plan
 
+GIT STATS
+
 ---
 
 # CORE OBJECTIVE

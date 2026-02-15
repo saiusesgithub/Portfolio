@@ -1,0 +1,28 @@
+---
+import { skills } from '../data/portfolio';
+import SkillCard from './SkillCard.astro';
+---
+
+<section class="w-full border-beam-b">
+  <div class="grid grid-cols-1 lg:grid-cols-3">
+    <!-- Col 1: Header -->
+    <div class="border-beam-b lg:border-b-0 lg:border-beam-r p-8 lg:p-12 bg-white lg:bg-transparent">
+      <h2 class="text-5xl font-extrabold uppercase tracking-tight-custom leading-none mb-4">
+        Core<br />Skills.
+      </h2>
+      <div class="w-full h-[2px] bg-black mb-4"></div>
+      <p class="font-tech text-xs uppercase tracking-widest text-safety-orange">
+        /// EXPERTISE AREAS
+      </p>
+    </div>
+
+    <!-- Skill Cards -->
+    {skills.map((skill) => (
+      <SkillCard 
+        title={skill.title}
+        icon={skill.icon}
+        description={skill.description}
+      />
+    ))}
+  </div>
+</section>

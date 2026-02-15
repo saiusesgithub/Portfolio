@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import TechStack from '../components/TechStack.astro';
+import Skills from '../components/Skills.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Experience from '../components/Experience.astro';
+import Capabilities from '../components/Capabilities.astro';
+import Footer from '../components/Footer.astro';
+
+import { projects } from '../data/portfolio';
+---
+
+<Layout title="Brutalist Portfolio">
+  <Navbar />
+  
+  <Hero />
+  
+  <TechStack />
+  
+  <Skills />
+  
+  <!-- Projects Section -->
+  <section id="projects" class="w-full border-beam-b bg-rebar">
+    <div class="border-beam-b bg-concrete p-4 flex justify-between items-center sticky top-20 z-30">
+      <h2 class="text-2xl font-extrabold uppercase tracking-tight">Featured Projects</h2>
+      <span class="font-tech text-xs border border-black px-2 py-1">INDEX: 01-0{projects.length}</span>
+    </div>
+
+    {projects.map((project) => (
+      <ProjectCard 
+        title={project.title}
+        year={project.year}
+        description={project.description}
+        image={project.image}
+        tags={project.tags}
+        links={project.links}
+      />
+    ))}
+  </section>
+  
+  <Capabilities />
+  
+  <section id="experience">
+    <Experience />
+  </section>
+  
+  <Footer />
+</Layout>

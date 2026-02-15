@@ -1,0 +1,45 @@
+---
+import { siteData } from '../data/portfolio';
+
+const navLinks = [
+  { id: '01', name: 'Projects', href: '#projects' },
+  { id: '02', name: 'Skills', href: '#skills' },
+  { id: '03', name: 'Experience', href: '#experience' },
+];
+---
+
+<nav class="fixed top-0 left-0 w-full z-50 bg-concrete border-beam-b">
+  <div class="flex flex-col lg:flex-row justify-between lg:items-stretch h-auto lg:h-20">
+    <!-- Left: Logo -->
+    <div class="flex items-center justify-between p-4 lg:p-0 lg:w-1/4 lg:border-beam-r bg-concrete relative z-20">
+      <a href="#" class="block pl-4 lg:pl-6">
+        <span class="text-4xl lg:text-5xl font-extrabold tracking-tight-custom uppercase">{siteData.name}</span>
+      </a>
+      <!-- Mobile Menu Icon -->
+      <button class="lg:hidden p-2 border-beam bg-white">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Right: Links -->
+    <div class="hidden lg:flex flex-1 justify-end items-center font-tech text-xs tracking-widest uppercase divide-x-2 divide-black">
+      {navLinks.map(link => (
+        <a 
+          href={link.href} 
+          class="h-full flex items-center px-8 hover:bg-black hover:text-white transition-colors duration-0 border-l-2 border-black"
+        >
+          [{link.id}] {link.name}
+        </a>
+      ))}
+      <a 
+        href="#contact" 
+        class="h-full flex items-center px-8 bg-safety-orange text-white hover:bg-black transition-colors duration-0 font-bold border-l-2 border-black"
+      >
+        <i data-lucide="mail" class="w-4 h-4 mr-2"></i> Contact
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Spacer for Fixed Nav -->
+<div class="h-20 lg:h-20 w-full"></div>

@@ -1,0 +1,31 @@
+---
+import { experience } from '../data/portfolio';
+---
+
+<section class="w-full border-beam-b">
+  <div class="p-6 border-beam-b bg-white">
+    <h2 class="text-2xl font-extrabold uppercase tracking-tight">Work Experience</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    {experience.map((exp, index) => (
+      <div class={`relative h-auto min-h-[300px] p-8 group bg-concrete hover:bg-white transition-colors duration-0 ${index < experience.length - 1 ? 'border-beam-b lg:border-b-0 lg:border-beam-r' : ''}`}>
+        <div class="font-tech text-xs text-safety-orange mb-2 uppercase tracking-widest">
+          {exp.period}
+        </div>
+        <h3 class="text-2xl font-bold uppercase mb-2">
+          {exp.title}
+        </h3>
+        <div class="font-tech text-xs uppercase mb-4 opacity-70">
+          {exp.company} // {exp.location}
+        </div>
+        <p class="text-sm leading-relaxed opacity-80">
+          {exp.description}
+        </p>
+        
+        <!-- Corner decorations on hover -->
+        <div class="absolute top-4 left-4 w-3 h-3 border-l-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="absolute bottom-4 right-4 w-3 h-3 border-r-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      </div>
+    ))}
+  </div>
+</section>

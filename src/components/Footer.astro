@@ -1,0 +1,67 @@
+---
+import { siteData, socialLinks } from '../data/portfolio';
+---
+
+<footer id="contact" class="bg-black text-concrete w-full border-t-2 border-black">
+  <div class="grid grid-cols-1 lg:grid-cols-2">
+    
+    <div class="p-8 lg:p-16 border-b lg:border-b-0 lg:border-r border-[#333]">
+      <h2 class="text-5xl lg:text-7xl font-extrabold uppercase tracking-tight-custom leading-none mb-8">
+        Let's Build<br />Something<br />Together.
+      </h2>
+      
+      <div class="space-y-4">
+        <label class="font-tech text-xs uppercase tracking-widest text-gray-400">Get In Touch</label>
+        <div class="flex border border-[#555]">
+          <input 
+            type="email" 
+            placeholder="YOUR EMAIL" 
+            class="bg-transparent w-full p-4 font-tech text-white outline-none placeholder:text-gray-600 focus:bg-rebar"
+          >
+          <button class="bg-white text-black font-bold uppercase px-8 py-4 hover:bg-safety-orange hover:text-white transition-colors duration-0">
+            Send
+          </button>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <div class="mt-8 flex gap-4">
+        {socialLinks.map((social) => (
+          <a 
+            href={social.url} 
+            target="_blank"
+            rel="noopener noreferrer"
+            class="border border-[#555] p-3 hover:border-safety-orange hover:bg-safety-orange transition-colors duration-0 group"
+          >
+            <i data-lucide={social.icon} class="w-5 h-5 text-gray-400 group-hover:text-white"></i>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="p-8 lg:p-16 flex flex-col justify-between">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <div>
+          <h4 class="font-tech text-xs text-gray-400 uppercase mb-4">Location</h4>
+          <p class="uppercase font-bold text-sm leading-relaxed">
+            {siteData.location.split(',')[0]}<br />
+            {siteData.location.split(',')[1]}
+          </p>
+        </div>
+        <div>
+          <h4 class="font-tech text-xs text-gray-400 uppercase mb-4">Direct Contact</h4>
+          <p class="uppercase font-bold text-sm leading-relaxed">
+            <a href={`mailto:${siteData.email}`} class="hover:text-safety-orange transition-colors">
+              {siteData.email}
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between items-end md:items-center pt-8 border-t border-[#333] font-tech text-[10px] uppercase text-gray-500">
+        <div>© 2026 {siteData.name}. ALL RIGHTS RESERVED.</div>
+        <div class="mt-2 md:mt-0">BUILT WITH ASTRO</div>
+      </div>
+    </div>
+  </div>
+</footer>

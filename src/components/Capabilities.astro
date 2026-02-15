@@ -1,0 +1,25 @@
+---
+import { capabilities } from '../data/portfolio';
+---
+
+<section class="w-full border-beam-b p-6 lg:p-12">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-3xl font-extrabold uppercase tracking-tight mb-8">Technical Capabilities</h2>
+    
+    <div class="border-t-2 border-black">
+      {capabilities.map((cap) => (
+        <div class="group flex flex-col md:flex-row justify-between items-start md:items-center py-4 border-b-2 border-black hover:bg-safety-orange hover:text-white transition-colors duration-0 px-2 cursor-pointer">
+          <div class="font-tech text-xs uppercase w-32 opacity-70 group-hover:opacity-100 group-hover:text-white mb-2 md:mb-0">
+            Spec {cap.spec}
+          </div>
+          <div class="flex-1 font-bold uppercase text-lg">
+            {cap.title}
+          </div>
+          <div class="font-tech font-bold text-sm">
+            {cap.value}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

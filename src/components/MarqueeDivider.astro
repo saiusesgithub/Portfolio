@@ -1,0 +1,29 @@
+---
+const text = "/// SYSTEM SECURED /// CLOUD OPS ACTIVE /// PIPELINE RUNNING /// NO UNAUTHORIZED ACCESS /// DEPLOYMENT IN PROGRESS ";
+---
+
+<div class="w-full border-beam-b bg-safety-orange border-b-2 border-black overflow-hidden relative z-20 shadow-[0_4px_0_0_#000]">
+  <div class="marquee-container flex whitespace-nowrap py-2 lg:py-3">
+    <!-- Duplicate text for infinite scroll effect -->
+    <div class="marquee-text font-tech text-xs lg:text-sm font-bold uppercase tracking-widest text-black flex items-center">
+      {Array(4).fill(text).map((line) => (
+        <span class="px-4">{line}</span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .marquee-container {
+    width: 200%;
+  }
+  
+  .marquee-text {
+    animation: marquee-scroll 25s linear infinite;
+  }
+
+  @keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>

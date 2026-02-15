@@ -108,139 +108,172 @@ const categoryIcons: Record<string, string> = {
   '08': '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
 };
 ---
+<section id="skills" class="w-full bg-concrete border-beam-b relative pb-20">
+  <!-- Warning Tape Marquee Separator right at the top -->
+  <div class="w-full bg-[repeating-linear-gradient(45deg,#000,#000_10px,#ff4500_10px,#ff4500_20px)] h-4 border-b-4 border-black mb-12 lg:mb-20"></div>
 
-<section id="skills" class="w-full border-beam-b">
-  <div class="grid grid-cols-1 lg:grid-cols-12">
+  <div class="grid grid-cols-1 lg:grid-cols-12 max-w-[1400px] mx-auto px-4 lg:px-8 gap-8 lg:gap-12">
 
     <!-- LEFT PANEL: Sticky Heading -->
-    <div class="lg:col-span-4 border-beam-b lg:border-b-0 lg:border-beam-r p-8 lg:p-12 bg-white lg:bg-transparent">
-      <div class="lg:sticky lg:top-28">
-        <p class="font-tech text-xs text-safety-orange uppercase tracking-widest mb-4">
-          /// Tech Stack
+    <div class="lg:col-span-4 relative">
+      <div class="lg:sticky lg:top-28 border-4 border-black bg-white p-6 lg:p-10 shadow-[12px_12px_0_0_#000] relative">
+        <!-- Top Brackets & Decor -->
+        <div class="absolute -top-4 -left-4 w-8 h-8 border-t-4 border-l-4 border-safety-orange"></div>
+        <div class="absolute -bottom-4 -right-4 w-8 h-8 border-b-4 border-r-4 border-safety-orange"></div>
+        <div class="absolute top-4 right-4 text-[10px] font-tech font-bold text-gray-400">02_SYS.DB</div>
+        
+        <p class="font-tech text-xs bg-black text-white px-2 py-1 inline-block uppercase tracking-widest mb-6">
+          /// TECH_STACK_MODULE
         </p>
-        <h2 class="text-5xl lg:text-6xl font-extrabold uppercase tracking-tight-custom leading-[0.85] mb-6">
-          Core<br />Skills.
+        <h2 class="text-5xl lg:text-7xl font-black uppercase tracking-tight-custom leading-[0.85] mb-6 text-black" style="text-shadow: -3px 3px 0 #ff4500;">
+          CORE<br />SKILLS<span class="text-safety-orange">_</span>
         </h2>
-        <div class="w-16 h-[3px] bg-safety-orange mb-6"></div>
-        <p class="text-sm font-medium leading-relaxed opacity-70 max-w-sm">
+        
+        <div class="w-full h-1 bg-black mb-6"></div>
+        
+        <p class="text-base font-bold text-black border-l-4 border-safety-orange pl-4">
           Architecting cloud systems, automating pipelines, and building everything in between.
         </p>
+        
+        <!-- Decoration barcode -->
+        <div class="mt-8 flex gap-1 h-6 opacity-30">
+          <div class="w-1 bg-black"></div><div class="w-2 bg-black"></div><div class="w-1 bg-black"></div><div class="w-3 bg-black"></div>
+          <div class="w-1 bg-black"></div><div class="w-1 bg-black"></div><div class="w-4 bg-black"></div><div class="w-2 bg-black"></div>
+        </div>
       </div>
     </div>
 
     <!-- RIGHT PANEL: Stacked Skill Rows -->
-    <div class="lg:col-span-8">
+    <div class="lg:col-span-8 flex flex-col gap-8 lg:gap-10">
       {skillCategories.map((cat, idx) => (
-        <div class={`cursor-target skill-row group relative p-8 lg:p-10 hover:bg-white transition-colors duration-0 ${idx < skillCategories.length ? 'border-beam-b' : ''}`}>
-          <!-- Corner brackets on hover -->
-          <div class="absolute top-3 left-3 w-4 h-4 border-l-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-          <div class="absolute top-3 right-3 w-4 h-4 border-r-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-          <div class="absolute bottom-3 left-3 w-4 h-4 border-l-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-          <div class="absolute bottom-3 right-3 w-4 h-4 border-r-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+        <div class="group relative border-4 border-black bg-white p-6 lg:p-8 shadow-[8px_8px_0_0_#000] hover:shadow-[12px_12px_0_0_#ff4500] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-300">
+          
+          <!-- Category Card Header ID -->
+          <div class="absolute -top-5 left-6 border-4 border-black bg-safety-orange px-3 py-1 font-black text-xl lg:text-2xl text-black shadow-[4px_4px_0_0_#000] z-10 group-hover:-translate-y-1 transition-transform">
+            {cat.id}
+          </div>
 
-          <!-- Row Header -->
-          <div class="flex items-start gap-4 lg:gap-6">
-            <!-- Spec Number + Category Icon -->
-            <div class="flex flex-col items-center gap-2 shrink-0">
-              <span class="font-tech text-3xl lg:text-4xl font-bold text-gray-200 group-hover:text-safety-orange transition-colors duration-200 leading-none select-none">
-                {cat.id}
-              </span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-300 group-hover:text-safety-orange transition-colors duration-200">
-                <Fragment set:html={categoryIcons[cat.id]} />
-              </svg>
-            </div>
+          <!-- Top-right corner status dot -->
+          <div class="absolute top-4 right-6 flex items-center gap-2">
+            <span class="text-[9px] font-tech font-bold uppercase text-gray-500">SYS.MOUNTED</span>
+            <div class="w-2 h-2 rounded-full bg-green-500 border border-black animate-pulse"></div>
+          </div>
 
-            <div class="flex-1 min-w-0">
-              <!-- Title + Count -->
-              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-1">
-                <h3 class="text-lg lg:text-xl font-extrabold uppercase tracking-tight">{cat.title}</h3>
-                <span class="font-tech text-[10px] text-gray-400 uppercase tracking-widest shrink-0">
-                  {cat.techs.length} {cat.techs.length === 1 ? 'tool' : 'tools'}
+          <!-- Row Content -->
+          <div class="mt-4 flex flex-col pt-2">
+            
+            <div class="flex items-center gap-4 mb-3">
+               <!-- Icon Block -->
+              <div class="flex items-center justify-center w-12 h-12 border-2 border-black bg-gray-100 text-black group-hover:bg-black group-hover:text-safety-orange transition-colors duration-300 shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                  <Fragment set:html={categoryIcons[cat.id]} />
+                </svg>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl lg:text-2xl font-black uppercase tracking-tight text-black">{cat.title}</h3>
+                <span class="font-tech text-[10px] text-black bg-gray-200 border border-black px-1 uppercase tracking-widest shrink-0">
+                  {cat.techs.length} UNITS
                 </span>
               </div>
-              <p class="text-xs text-gray-500 mb-4 max-w-lg">{cat.description}</p>
+            </div>
 
-              <!-- Tech Pills -->
-              <div class="flex flex-wrap gap-2">
-                {cat.techs.map((tech) => (
-                  <span class="tech-pill inline-flex items-center gap-2 px-3 py-2 border-2 border-black text-xs font-bold uppercase tracking-wider hover:bg-black hover:text-white transition-colors duration-0 group/pill">
+            <p class="text-sm font-bold text-gray-600 mb-6 border-b-2 border-dashed border-gray-300 pb-4">
+              {cat.description}
+            </p>
+
+            <!-- Brutalist Tech Pills -->
+            <div class="flex flex-wrap gap-2 lg:gap-3">
+              {cat.techs.map((tech) => (
+                <div class="tech-pill flex flex-col border-2 border-black bg-white shadow-[3px_3px_0_0_#000] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all duration-100 cursor-crosshair">
+                  <div class="flex items-center gap-2 px-3 py-2 bg-white text-black hover:bg-black hover:text-white transition-colors duration-0">
                     {getIcon(tech.name) ? (
                       <img
                         src={getIcon(tech.name)!}
                         alt=""
-                        class="w-4 h-4 group-hover/pill:invert transition-all duration-0"
+                        class="w-4 h-4 icon-img transition-all duration-0"
                         loading="lazy"
                       />
                     ) : (
-                      <span class="w-1.5 h-1.5 rounded-full bg-safety-orange shrink-0"></span>
+                      <span class="w-2 h-2 bg-safety-orange border border-black shrink-0"></span>
                     )}
-                    <span>{tech.name}</span>
-                    {tech.items && (
-                      <span class="text-[9px] font-normal text-gray-400 group-hover/pill:text-gray-300 tracking-normal normal-case">
-                        {tech.items.join(' · ')}
-                      </span>
-                    )}
-                  </span>
-                ))}
-              </div>
+                    <span class="font-bold text-xs lg:text-sm uppercase tracking-wider">{tech.name}</span>
+                  </div>
+                  {tech.items && (
+                    <div class="px-3 py-1 border-t-2 border-black bg-gray-50 text-[9px] lg:text-[10px] uppercase font-bold text-gray-600 block w-full whitespace-normal">
+                      {tech.items.join(' / ')}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
+            
           </div>
         </div>
       ))}
 
-      <!-- CURRENTLY EXPLORING -->
-      <div class="cursor-target group relative p-8 lg:p-10 hover:bg-white transition-colors duration-0 bg-gray-50">
-        <div class="absolute top-3 left-3 w-4 h-4 border-l-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-        <div class="absolute top-3 right-3 w-4 h-4 border-r-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-        <div class="absolute bottom-3 left-3 w-4 h-4 border-l-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-        <div class="absolute bottom-3 right-3 w-4 h-4 border-r-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+      <!-- CURRENTLY EXPLORING (Special Layout Card) -->
+      <div class="group relative border-4 border-safety-orange bg-black p-6 lg:p-8 shadow-[8px_8px_0_0_#ff4500] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-300 mt-4 overflow-hidden">
+        <!-- Stripe overlay -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none bg-[repeating-linear-gradient(-45deg,transparent,transparent_4px,white_4px,white_8px)]"></div>
+        
+        <div class="absolute top-4 right-6 flex items-center gap-2 z-10">
+          <span class="text-[9px] font-tech font-bold uppercase text-safety-orange animate-pulse">IN_PROGRESS</span>
+        </div>
 
-        <div class="flex items-start gap-4 lg:gap-6">
-          <div class="flex flex-col items-center gap-2 shrink-0">
-            <span class="font-tech text-3xl lg:text-4xl font-bold text-safety-orange leading-none select-none">
-              →
-            </span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-safety-orange">
-              <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-            </svg>
+        <div class="relative z-10 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+             <div class="flex items-center justify-center w-12 h-12 border-2 border-safety-orange bg-safety-orange text-black shrink-0">
+              <span class="font-tech text-3xl font-black leading-none">?</span>
+            </div>
+            
+            <div class="flex-1 min-w-0">
+              <h3 class="text-xl lg:text-2xl font-black uppercase tracking-tight text-white">Currently Exploring</h3>
+            </div>
           </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-baseline gap-2 mb-1">
-              <h3 class="text-lg lg:text-xl font-extrabold uppercase tracking-tight text-safety-orange">Currently Exploring</h3>
-              <span class="font-tech text-[10px] text-gray-400 uppercase tracking-widest animate-pulse">IN PROGRESS</span>
-            </div>
-            <p class="text-xs text-gray-500 mb-4">Technologies I'm actively learning and experimenting with.</p>
-            <div class="flex flex-wrap gap-2">
-              {currentlyExploring.map((tech) => (
-                <span class="tech-pill inline-flex items-center gap-2 px-3 py-2 border-2 border-dashed border-safety-orange text-xs font-bold uppercase tracking-wider text-safety-orange hover:bg-safety-orange hover:text-white transition-colors duration-0 group/pill">
-                  {getIcon(tech.name) ? (
-                    <img
-                      src={getIcon(tech.name)!}
-                      alt=""
-                      class="w-4 h-4 group-hover/pill:invert transition-all duration-0"
-                      loading="lazy"
-                      style="filter: invert(22%) sepia(88%) saturate(6713%) hue-rotate(3deg) brightness(101%) contrast(108%);"
-                    />
-                  ) : (
-                    <span class="w-1.5 h-1.5 rounded-full bg-safety-orange shrink-0"></span>
-                  )}
-                  {tech.name}
-                </span>
-              ))}
-            </div>
+          
+          <p class="text-sm font-bold text-gray-400 mb-6 border-b-2 border-dashed border-[#333] pb-4">
+            R&D pipeline. Unstable builds and experimental technologies.
+          </p>
+
+          <div class="flex flex-wrap gap-2 lg:gap-3">
+            {currentlyExploring.map((tech) => (
+              <div class="tech-pill flex items-center gap-2 px-3 py-2 border-2 border-dashed border-safety-orange bg-black text-safety-orange hover:bg-safety-orange hover:text-black transition-colors duration-0 cursor-crosshair">
+                {getIcon(tech.name) ? (
+                  <img
+                    src={getIcon(tech.name)!}
+                    alt=""
+                    class="w-4 h-4 icon-img transition-all duration-0"
+                    loading="lazy"
+                    style="filter: invert(41%) sepia(87%) saturate(2284%) hue-rotate(345deg) brightness(101%) contrast(105%);"
+                  />
+                ) : (
+                  <span class="w-1.5 h-1.5 bg-safety-orange shrink-0"></span>
+                )}
+                <span class="font-bold text-xs lg:text-sm uppercase tracking-wider">{tech.name}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </section>
 
 <style is:global>
-  .tech-pill img {
+  /* Base state: black for icons in light buttons */
+  .tech-pill .icon-img {
     transition: filter 0.1s;
   }
-  .tech-pill:hover img {
-    filter: invert(1) !important;
+  
+  /* When hovering the primary button area, white icons */
+  .tech-pill > div:hover .icon-img {
+    filter: invert(1) brightness(2) !important;
+  }
+  
+  /* Currently exploring hover to black */
+  .tech-pill.border-dashed:hover .icon-img {
+    filter: brightness(0) saturate(100%) !important;
   }
 </style>

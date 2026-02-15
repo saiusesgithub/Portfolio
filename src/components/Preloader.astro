@@ -1,153 +1,271 @@
 ---
-// Brutalist Preloader - "Hello" in multiple languages
+// Neo-Brutalist Boot Sequence Preloader
 ---
 
-<div id="preloader" class="fixed inset-0 z-[9999] bg-concrete flex items-center justify-center">
-  <!-- Noise Overlay -->
-  <div class="noise-overlay"></div>
-  
-  <!-- Border Frame -->
-  <div class="absolute inset-8 border-beam pointer-events-none"></div>
-  
-  <!-- Main Content -->
-  <div class="relative z-10 text-center w-full max-w-2xl px-4">
-    <!-- Technical Label -->
-    <div class="font-tech text-xs text-safety-orange mb-6 uppercase tracking-widest flex items-center justify-center gap-2">
-      <span class="inline-block w-2 h-2 bg-safety-orange rounded-full animate-pulse"></span>
-      INITIALIZING PORTFOLIO
-    </div>
-    
-    <!-- Hello Text Container with fixed height -->
-    <div class="relative flex items-center justify-center overflow-hidden mb-6" style="height: 150px;">
-      <h1 id="hello-text" class="text-8xl lg:text-9xl font-extrabold uppercase tracking-tight-custom text-black absolute">
-        Hello
-      </h1>
-    </div>
-    
-    <!-- Language Label with fixed height -->
-    <div class="font-tech text-xs uppercase tracking-wider opacity-50 mb-12" id="language-label" style="height: 20px;">
-      English
-    </div>
-    
-    <!-- Loading Bar - fixed position -->
-    <div class="w-80 mx-auto">
-      <div class="border-beam bg-white h-3 overflow-hidden">
-        <div id="loading-bar" class="h-full bg-safety-orange transition-all duration-300"></div>
-      </div>
-    </div>
-    
-    <!-- Loading text - fixed position -->
-    <div class="font-tech text-[10px] mt-4 text-center opacity-50" style="height: 16px;">
-      LOADING SYSTEM...
-    </div>
-    
-    <!-- System Info -->
-    <div class="absolute bottom-8 left-8 font-tech text-[10px] text-gray-500 uppercase hidden lg:block">
-      BUILD: v2.0.1<br />
-      STATUS: ONLINE
-    </div>
-    
-    <div class="absolute bottom-8 right-8 font-tech text-[10px] text-gray-500 uppercase hidden lg:block">
-      RENDER: ASTRO<br />
-      MODE: PRODUCTION
-    </div>
-  </div>
+<!-- Exit bars (sweep over the preloader to reveal the site) -->
+<div id="preloader-exit" class="fixed inset-0 z-[10001] pointer-events-none flex flex-col">
+  <div class="exit-bar bg-black" style="flex:1; transform: translateX(100%);"></div>
+  <div class="exit-bar bg-black" style="flex:1; transform: translateX(-100%);"></div>
+  <div class="exit-bar bg-black" style="flex:1; transform: translateX(100%);"></div>
+  <div class="exit-bar bg-black" style="flex:1; transform: translateX(-100%);"></div>
+  <div class="exit-bar bg-black" style="flex:1; transform: translateX(100%);"></div>
 </div>
 
-<style>
-  #preloader.hide {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.8s ease-out;
+<!-- Main Preloader -->
+<div id="preloader" class="fixed inset-0 z-[10000] bg-black flex flex-col overflow-hidden select-none">
+
+  <!-- Corner brackets (orange) -->
+  <div class="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-safety-orange"></div>
+  <div class="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-safety-orange"></div>
+  <div class="absolute bottom-[3.4rem] left-3 w-5 h-5 border-b-2 border-l-2 border-safety-orange"></div>
+  <div class="absolute bottom-[3.4rem] right-3 w-5 h-5 border-b-2 border-r-2 border-safety-orange"></div>
+
+  <!-- Top System Bar -->
+  <div class="border-b-2 border-[#1a1a1a] px-10 py-2 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-3 font-mono text-[11px] text-[#555] uppercase tracking-widest">
+      <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+      <span>BOOT_SEQ v2.0 — saisrujan-portfolio.init()</span>
+    </div>
+    <div id="boot-percent" class="font-mono text-sm font-bold text-safety-orange tracking-widest">0%</div>
+  </div>
+
+  <!-- Main 2-column area -->
+  <div class="flex flex-1 min-h-0 overflow-hidden">
+
+    <!-- LEFT: Terminal Boot Log -->
+    <div class="flex-1 border-r-2 border-[#1a1a1a] p-6 lg:p-10 flex flex-col overflow-hidden min-w-0">
+      <div class="font-mono text-[10px] text-[#444] uppercase tracking-[0.3em] mb-5">// SYSTEM_LOG</div>
+      <div id="boot-log" class="flex flex-col gap-[6px] overflow-hidden font-mono">
+        <!-- log lines injected by JS -->
+      </div>
+    </div>
+
+    <!-- RIGHT: Greeting + Ident Card -->
+    <div class="w-[50%] flex flex-col items-center justify-between p-6 lg:p-10 gap-6">
+
+      <!-- Greeting Block -->
+      <div class="flex-1 flex flex-col items-center justify-center w-full">
+        <div class="font-mono text-[10px] text-[#444] uppercase tracking-[0.3em] mb-6 self-start">// HANDSHAKE_PROTOCOL</div>
+
+        <div id="greeting-text"
+          class="font-black uppercase text-white leading-[0.85] text-center"
+          style="font-size: clamp(2rem, 5vw, 5rem);">
+          HELLO
+        </div>
+        <div id="greeting-lang"
+          class="font-mono text-[11px] text-safety-orange uppercase tracking-[0.5em] mt-3">
+          ENGLISH
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+
+  <!-- Bottom: Status pills + Progress bar -->
+  <div class="border-t-2 border-[#1a1a1a] px-10 py-3 flex items-center justify-between gap-4 shrink-0">
+    <!-- Left: Grid unlock hint -->
+    <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest">
+      <span class="w-2 h-2 bg-safety-orange border border-safety-orange shrink-0 animate-pulse"></span>
+      <span class="text-[#555]">// <span class="text-safety-orange">ACTION REQUIRED</span> — hover over all orange squares on the next screen to unlock the interface</span>
+    </div>
+
+    <!-- Right: Progress bar -->
+    <div class="flex items-center gap-3 shrink-0">
+      <div class="font-mono text-[10px] text-[#333] uppercase tracking-widest">SYS_LOAD</div>
+      <div class="w-40 border border-[#333] bg-black h-[6px] overflow-hidden">
+        <div id="loading-bar" class="h-full bg-safety-orange" style="width: 0%;"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style is:global>
+  .exit-bar {
+    width: 100%;
+    transition: transform 0.35s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+  .exit-bar.active {
+    transform: translateX(0) !important;
   }
 </style>
 
-<script>
-  // Preloader Logic
-  (function() {
-    const greetings = [
-      { text: 'Hello', lang: 'English' },
-      { text: 'Hola', lang: 'Spanish' },
-      { text: 'Bonjour', lang: 'French' },
-      { text: 'Ciao', lang: 'Italian' },
-      { text: 'こんにちは', lang: 'Japanese' },
-      { text: 'Olá', lang: 'Portuguese' },
-      { text: '你好', lang: 'Chinese' },
-      { text: 'नमस्ते', lang: 'Hindi' },
-      { text: 'Hej', lang: 'Swedish' },
-    ];
-    
-    let currentIndex = 0;
-    let progress = 0;
-    
-    const helloText = document.getElementById('hello-text');
-    const languageLabel = document.getElementById('language-label');
-    const loadingBar = document.getElementById('loading-bar');
-    const preloader = document.getElementById('preloader');
-    
-    if (!helloText || !languageLabel || !loadingBar || !preloader) {
-      console.error('Preloader elements not found');
-      return;
-    }
-    
-    // Non-null assertions after validation
-    const hello = helloText as HTMLElement;
-    const label = languageLabel as HTMLElement;
-    const bar = loadingBar as HTMLElement;
-    const pre = preloader as HTMLElement;
+<script is:inline>
+(function () {
 
-    function updateGreeting() {
-      // Instant swap — no fade, no delay
-      currentIndex = (currentIndex + 1) % greetings.length;
-      hello.textContent = greetings[currentIndex].text;
-      label.textContent = greetings[currentIndex].lang;
+  var bootLines = [
+    { time: '0.000000', module: 'KERNEL',    msg: 'saisrujan-portfolio v2.0 booting' },
+    { time: '0.148000', module: 'DISPLAY',   msg: 'renderer initialized' },
+    { time: '0.312000', module: 'FONTS',     msg: 'typeface modules loaded' },
+    { time: '0.491000', module: 'CLOUD',     msg: 'connecting to infrastructure layer' },
+    { time: '0.643000', module: 'AWS',       msg: 'credentials verified  ✓' },
+    { time: '0.810000', module: 'DOCKER',    msg: 'containers mounted  ✓' },
+    { time: '0.974000', module: 'TERRAFORM', msg: 'state backend synced  ✓' },
+    { time: '1.145000', module: 'GH_ACTIONS',msg: 'workflows: 3 passing  ✓' },
+    { time: '1.320000', module: 'NET',       msg: 'tls handshake complete' },
+    { time: '1.502000', module: 'AUTH',      msg: 'saisrujan — access granted  ✓' },
+    { time: '1.680000', module: 'UI',        msg: 'assembling components' },
+    { time: '1.880000', module: 'ASSETS',    msg: 'stylesheets compiled' },
+    { time: '2.100000', module: 'CACHE',     msg: 'warm cache hit — 98%' },
+    { time: '2.340000', module: 'READY',     msg: 'all modules nominal. launching…' },
+  ];
+
+  var greetings = [
+    { text: 'HELLO',     lang: 'ENGLISH' },
+    { text: 'HOLA',      lang: 'SPANISH' },
+    { text: 'BONJOUR',   lang: 'FRENCH' },
+    { text: 'CIAO',      lang: 'ITALIAN' },
+    { text: 'こんにちは',  lang: 'JAPANESE' },
+    { text: 'OLÁ',       lang: 'PORTUGUESE' },
+    { text: '你好',        lang: 'CHINESE' },
+    { text: 'NAMASTE',   lang: 'HINDI' },
+    { text: 'HEJ',       lang: 'SWEDISH' },
+    { text: 'HALLO',     lang: 'GERMAN' },
+    { text: '안녕하세요',   lang: 'KOREAN' },
+    { text: 'SAWUBONA',  lang: 'ZULU' },
+  ];
+
+  // Status pills removed from bottom-left — keeping state tracking for potential reuse
+  var statusPills = [];
+
+  // ── Elements ──────────────────────────────
+  var preloader   = document.getElementById('preloader');
+  var exitEl      = document.getElementById('preloader-exit');
+  var logEl       = document.getElementById('boot-log');
+  var greetText   = document.getElementById('greeting-text');
+  var greetLang   = document.getElementById('greeting-lang');
+  var barEl       = document.getElementById('loading-bar');
+  var percentEl   = document.getElementById('boot-percent');
+  var pillsEl     = document.getElementById('status-pills');
+
+  if (!preloader || !exitEl || !logEl) return;
+
+  document.body.style.overflow = 'hidden';
+
+  // ── State ─────────────────────────────────
+  var progress    = 0;
+  var logIdx      = 0;
+  var greetIdx    = 0;
+  var pillsMade   = {};
+  var exiting     = false;
+
+  var TOTAL_MS    = 5000;
+  var LOG_INTERVAL = TOTAL_MS / bootLines.length; // ~283ms per line
+  var TICK_MS     = 40;
+  var PROGRESS_STEP = (100 / TOTAL_MS) * TICK_MS;
+
+  // ── Print a boot line ─────────────────────
+  function printLine(line) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex; gap:8px; align-items:baseline; opacity:0; transition: opacity 0.15s;';
+
+    var t = document.createElement('span');
+    t.style.cssText = 'color:#444; font-size:10px; white-space:nowrap;';
+    t.textContent = '[ ' + line.time + ']';
+
+    var m = document.createElement('span');
+    var isReady = line.module === 'READY' || line.module === 'AUTH';
+    m.style.cssText = 'font-size:10px; font-weight:700; white-space:nowrap; color:' + (isReady ? '#ff4500' : '#22c55e') + ';';
+    m.textContent = line.module + ':';
+
+    var msg = document.createElement('span');
+    msg.style.cssText = 'color:#aaa; font-size:10px;';
+    msg.textContent = line.msg;
+
+    row.appendChild(t);
+    row.appendChild(m);
+    row.appendChild(msg);
+    logEl.appendChild(row);
+
+    requestAnimationFrame(function() { row.style.opacity = '1'; });
+  }
+
+  // ── Add status pill ───────────────────────
+  function addPill(key) {
+    if (pillsMade[key]) return;
+    pillsMade[key] = true;
+
+    var pill = document.createElement('span');
+    pill.style.cssText = 'display:inline-flex; align-items:center; gap:4px; border:1px solid #333; padding:2px 8px; font-family:monospace; font-size:10px; text-transform:uppercase; color:#22c55e; background:#0a0a0a; letter-spacing:.1em; opacity:0; transition:opacity .2s;';
+    pill.innerHTML = key + ' <span style="color:#22c55e;">✓</span>';
+    pillsEl.appendChild(pill);
+    requestAnimationFrame(function() { pill.style.opacity = '1'; });
+  }
+
+  // ── Log line interval ─────────────────────
+  var logTimer = setInterval(function() {
+    if (logIdx < bootLines.length) {
+      printLine(bootLines[logIdx]);
+      logIdx++;
+    } else {
+      clearInterval(logTimer);
     }
-    
-    function updateProgress() {
-      progress += 1;
-      if (bar) {
-        bar.style.width = `${Math.min(progress, 100)}%`;
-      }
-      
-      if (progress >= 100) {
-        setTimeout(() => {
-          if (pre) {
-            pre.classList.add('hide');
-            // Remove from DOM after animation
-            setTimeout(() => {
-              pre.remove();
-              // Enable scrolling
-              document.body.style.overflow = '';
-            }, 800);
-          }
-        }, 400);
-      }
-    }
-    
-    // Prevent scrolling during preloader
-    document.body.style.overflow = 'hidden';
-    
-    // Change greeting every 440ms
-    const greetingInterval = setInterval(() => {
-      if (progress < 100) {
-        updateGreeting();
-      } else {
-        clearInterval(greetingInterval);
-      }
-    }, 440);
-    
-    // Update progress every 40ms (total ~4 seconds: 100% / 4000ms = 1% per 40ms)
-    const progressInterval = setInterval(() => {
-      updateProgress();
-      if (progress >= 100) {
-        clearInterval(progressInterval);
-      }
-    }, 40);
-    
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', () => {
-      clearInterval(greetingInterval);
-      clearInterval(progressInterval);
+  }, LOG_INTERVAL);
+
+  // ── Greeting interval ─────────────────────
+  // First word (HELLO) stays for 800ms, then rest cycle at 500ms
+  var greetTimer = null;
+
+  function startGreetCycle() {
+    greetTimer = setInterval(function() {
+      if (exiting) { clearInterval(greetTimer); return; }
+      greetIdx = (greetIdx + 1) % greetings.length;
+      if (greetText) greetText.textContent = greetings[greetIdx].text;
+      if (greetLang) greetLang.textContent = greetings[greetIdx].lang;
+    }, 500);
+  }
+
+  // Hold "HELLO" for 800ms before starting the regular cycle
+  setTimeout(startGreetCycle, 600);
+
+  // ── Main progress tick ────────────────────
+  var progressTimer = setInterval(function() {
+    if (exiting) { clearInterval(progressTimer); return; }
+
+    progress = Math.min(progress + PROGRESS_STEP, 100);
+    var p = Math.floor(progress);
+
+    if (barEl)     barEl.style.width = progress.toFixed(1) + '%';
+    if (percentEl) percentEl.textContent = p + '%';
+
+
+    // Status pills
+    statusPills.forEach(function(s) {
+      if (progress >= s.threshold) addPill(s.key);
     });
-  })();
+
+    if (progress >= 100) {
+      clearInterval(progressTimer);
+      clearInterval(greetTimer);
+      clearInterval(logTimer);
+      setTimeout(triggerExit, 300);
+    }
+  }, TICK_MS);
+
+  // ── Exit animation ────────────────────────
+  function triggerExit() {
+    exiting = true;
+    var bars = exitEl.querySelectorAll('.exit-bar');
+
+    bars.forEach(function(bar, i) {
+      setTimeout(function() {
+        bar.classList.add('active');
+      }, i * 90);
+    });
+
+    // After all bars are fully in, kill preloader
+    var totalDelay = (bars.length - 1) * 90 + 380;
+    setTimeout(function() {
+      if (preloader) preloader.remove();
+      // Allow some time before removing exit bars (so no flash)
+      setTimeout(function() {
+        if (exitEl) exitEl.remove();
+      }, 50);
+      document.body.style.overflow = '';
+    }, totalDelay);
+  }
+
+})();
 </script>

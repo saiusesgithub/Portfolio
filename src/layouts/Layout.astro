@@ -5,6 +5,7 @@ interface Props {
 
 const { title } = Astro.props;
 import TargetCursor from '../components/TargetCursor';
+import Preloader from '../components/Preloader.astro';
 ---
 
 <!doctype html>
@@ -44,6 +45,9 @@ import TargetCursor from '../components/TargetCursor';
     <title>{title}</title>
   </head>
   <body class="antialiased selection:bg-safety-orange selection:text-white">
+    <!-- Preloader -->
+    <Preloader />
+    
     <!-- The Grain -->
     <div class="noise-overlay"></div>
     

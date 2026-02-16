@@ -1,0 +1,223 @@
+---
+// Brutalist Preloader - "Hello" in multiple languages
+---
+
+<div id="preloader" class="fixed inset-0 z-[9999] bg-concrete flex items-center justify-center">
+  <!-- Noise Overlay -->
+  <div class="noise-overlay"></div>
+  
+  <!-- Border Frame -->
+  <div class="absolute inset-8 border-beam pointer-events-none"></div>
+  
+  <!-- Main Content -->
+  <div class="relative z-10 text-center w-full max-w-2xl px-4">
+    <!-- Technical Label -->
+    <div class="font-tech text-xs text-safety-orange mb-6 uppercase tracking-widest flex items-center justify-center gap-2">
+      <span class="inline-block w-2 h-2 bg-safety-orange rounded-full animate-pulse"></span>
+      INITIALIZING PORTFOLIO
+    </div>
+    
+    <!-- Hello Text Container with fixed height -->
+    <div class="relative flex items-center justify-center overflow-hidden mb-6" style="height: 150px;">
+      <h1 id="hello-text" class="text-8xl lg:text-9xl font-extrabold uppercase tracking-tight-custom text-black absolute">
+        Hello
+      </h1>
+    </div>
+    
+    <!-- Language Label with fixed height -->
+    <div class="font-tech text-xs uppercase tracking-wider opacity-50 mb-12" id="language-label" style="height: 20px;">
+      English
+    </div>
+    
+    <!-- Loading Bar - fixed position -->
+    <div class="w-80 mx-auto">
+      <div class="border-beam bg-white h-3 overflow-hidden">
+        <div id="loading-bar" class="h-full bg-safety-orange transition-all duration-300"></div>
+      </div>
+    </div>
+    
+    <!-- Loading text - fixed position -->
+    <div class="font-tech text-[10px] mt-4 text-center opacity-50" style="height: 16px;">
+      LOADING SYSTEM...
+    </div>
+    
+    <!-- System Info -->
+    <div class="absolute bottom-8 left-8 font-tech text-[10px] text-gray-500 uppercase hidden lg:block">
+      BUILD: v2.0.1<br />
+      STATUS: ONLINE
+    </div>
+    
+    <div class="absolute bottom-8 right-8 font-tech text-[10px] text-gray-500 uppercase hidden lg:block">
+      RENDER: ASTRO<br />
+      MODE: PRODUCTION
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
+  @keyframes glitchFade {
+    0% {
+      opacity: 1;
+    }
+    25% {
+      opacity: 0;
+      transform: translateX(-2px);
+    }
+    50% {
+      opacity: 0;
+      transform: translateX(2px);
+    }
+    75% {
+      opacity: 0;
+      transform: translateX(-1px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(0);
+    }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+  
+  .fade-out {
+    animation: fadeOut 0.5s ease-in-out forwards;
+  }
+  
+  .glitch-out {
+    animation: glitchFade 0.3s ease-out forwards;
+  }
+  
+  #preloader.hide {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-out;
+  }
+  
+  #hello-text {
+    transition: opacity 0.3s ease-in-out;
+  }
+</style>
+
+<script>
+  // Preloader Logic
+  (function() {
+    const greetings = [
+      { text: 'Hello', lang: 'English' },
+      { text: 'Hola', lang: 'Spanish' },
+      { text: 'Bonjour', lang: 'French' },
+      { text: 'Ciao', lang: 'Italian' },
+      { text: 'こんにちは', lang: 'Japanese' },
+      { text: 'Olá', lang: 'Portuguese' },
+      { text: 'Привет', lang: 'Russian' },
+      { text: '你好', lang: 'Chinese' },
+      { text: 'नमस्ते', lang: 'Hindi' },
+      { text: 'Hej', lang: 'Swedish' },
+    ];
+    
+    let currentIndex = 0;
+    let progress = 0;
+    let isAnimating = false;
+    
+    const helloText = document.getElementById('hello-text');
+    const languageLabel = document.getElementById('language-label');
+    const loadingBar = document.getElementById('loading-bar');
+    const preloader = document.getElementById('preloader');
+    
+    if (!helloText || !languageLabel || !loadingBar || !preloader) {
+      console.error('Preloader elements not found');
+      return;
+    }
+    
+    function updateGreeting() {
+      if (isAnimating) return;
+      isAnimating = true;
+      
+      // Smooth fade out
+      helloText.style.opacity = '0';
+      
+      setTimeout(() => {
+        // Update text
+        currentIndex = (currentIndex + 1) % greetings.length;
+        helloText.textContent = greetings[currentIndex].text;
+        languageLabel.textContent = greetings[currentIndex].lang;
+        
+        // Smooth fade in
+        helloText.style.opacity = '1';
+        
+        isAnimating = false;
+      }, 300);
+    }
+    
+    function updateProgress() {
+      progress += 1;
+      if (loadingBar) {
+        loadingBar.style.width = `${Math.min(progress, 100)}%`;
+      }
+      
+      if (progress >= 100) {
+        setTimeout(() => {
+          if (preloader) {
+            preloader.classList.add('hide');
+            // Remove from DOM after animation
+            setTimeout(() => {
+              preloader.remove();
+              // Enable scrolling
+              document.body.style.overflow = '';
+            }, 800);
+          }
+        }, 400);
+      }
+    }
+    
+    // Prevent scrolling during preloader
+    document.body.style.overflow = 'hidden';
+    
+    // Initial state
+    if (helloText) {
+      helloText.style.opacity = '1';
+    }
+    
+    // Change greeting every 550ms (smoother transitions)
+    const greetingInterval = setInterval(() => {
+      if (progress < 100) {
+        updateGreeting();
+      } else {
+        clearInterval(greetingInterval);
+      }
+    }, 550);
+    
+    // Update progress every 50ms (total 5 seconds: 100% / 5000ms = 1% per 50ms)
+    const progressInterval = setInterval(() => {
+      updateProgress();
+      if (progress >= 100) {
+        clearInterval(progressInterval);
+      }
+    }, 50);
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      clearInterval(greetingInterval);
+      clearInterval(progressInterval);
+    });
+  })();
+</script>

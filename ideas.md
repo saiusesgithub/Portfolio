@@ -378,3 +378,99 @@ When someone visits, they should think:
 
 "This person doesn't just use systems.
 They build systems."
+
+
+----
+
+
+
+- [ ] **Avatar/Photo** (in similar brutalist theme)
+- [ ] **Animated Name (typewriter effect)** - in header
+
+---
+
+## **2. NAVIGATION LINKS**
+
+- [ ] **About/Bio**
+- [ ] **Resume/CV*
+- [ ] **Timeline/Journey**
+- [ ] **Awards & Recognition**
+- [ ] **Open Source Contributions**
+
+---
+
+- [ ] **Current Location** (Real-time or static)
+- [ ] **Local Time/Clock**
+- [ ] **Weather** (where you are)
+
+- [ ] **Current Focus** ("Learning WebGPU")/Currently Reading/Learning**
+
+
+- [ ] **GitHub Contribution Streak**
+
+
+## **5. SOCIAL & EXTERNAL LINKS**
+- [ ] **GitHub**
+- [ ] **LinkedIn**
+- [ ] **Twitter/X**
+- [ ] **Medium/Dev.to**
+- [ ] **Instagram**
+
+---
+
+- [ ] **Audio Background**
+
+---
+- [ ] **Easter Egg Trigger** (Konami code, secret menu)
+
+---
+
+## **11. CREDENTIALS & TRUST SIGNALS**
+
+- [ ] **Certifications Badge Count**
+
+- [ ] **Award Badges**
+
+
+## **12. TECHNICAL INFO**
+
+- [ ] **Build Info** (Built with Astro + React)
+- [ ] **Last Deploy Date**
+- [ ] **Version Number** (v2.3.1)
+
+
+- [ ] **Tech Stack Icons**
+
+---
+
+## **13. GAMIFICATION**
+- [ ] **Visitor Counter** (You're visitor #1,247)
+
+- [ ] **Streak Counter** (Coding streak: 127 days) - github
+
+My Journal Link
+
+---
+
+- [ ] **Scroll Progress Bar**
+- [ ] **"Back to Top" Button**
+
+---
+
+
+- [ ] **Favorite Quote**
+- [ ] **Hobbies/Interests Icons**
+
+
+
+---
+
+- [ ] **User Agent Detection** (Chrome 121.0.0)
+
+
+- [ ] **Memory Usage**
+- [ ] **Ping/Latency**
+
+- [ ] **BIOS-Style Boot Sequence**
+- [ ] **Loading Bar** (████████░░ 80%)
+

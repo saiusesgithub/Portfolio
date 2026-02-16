@@ -148,21 +148,27 @@
       return;
     }
     
+    // Non-null assertions after validation
+    const hello = helloText as HTMLElement;
+    const label = languageLabel as HTMLElement;
+    const bar = loadingBar as HTMLElement;
+    const pre = preloader as HTMLElement;
+    
     function updateGreeting() {
       if (isAnimating) return;
       isAnimating = true;
       
       // Smooth fade out
-      helloText.style.opacity = '0';
+      hello.style.opacity = '0';
       
       setTimeout(() => {
         // Update text
         currentIndex = (currentIndex + 1) % greetings.length;
-        helloText.textContent = greetings[currentIndex].text;
-        languageLabel.textContent = greetings[currentIndex].lang;
+        hello.textContent = greetings[currentIndex].text;
+        label.textContent = greetings[currentIndex].lang;
         
         // Smooth fade in
-        helloText.style.opacity = '1';
+        hello.style.opacity = '1';
         
         isAnimating = false;
       }, 300);
@@ -170,17 +176,17 @@
     
     function updateProgress() {
       progress += 1;
-      if (loadingBar) {
-        loadingBar.style.width = `${Math.min(progress, 100)}%`;
+      if (bar) {
+        bar.style.width = `${Math.min(progress, 100)}%`;
       }
       
       if (progress >= 100) {
         setTimeout(() => {
-          if (preloader) {
-            preloader.classList.add('hide');
+          if (pre) {
+            pre.classList.add('hide');
             // Remove from DOM after animation
             setTimeout(() => {
-              preloader.remove();
+              pre.remove();
               // Enable scrolling
               document.body.style.overflow = '';
             }, 800);
@@ -193,8 +199,8 @@
     document.body.style.overflow = 'hidden';
     
     // Initial state
-    if (helloText) {
-      helloText.style.opacity = '1';
+    if (hello) {
+      hello.style.opacity = '1';
     }
     
     // Change greeting every 550ms (smoother transitions)

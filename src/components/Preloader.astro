@@ -55,66 +55,10 @@
 </div>
 
 <style>
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-  
-  @keyframes glitchFade {
-    0% {
-      opacity: 1;
-    }
-    25% {
-      opacity: 0;
-      transform: translateX(-2px);
-    }
-    50% {
-      opacity: 0;
-      transform: translateX(2px);
-    }
-    75% {
-      opacity: 0;
-      transform: translateX(-1px);
-    }
-    100% {
-      opacity: 0;
-      transform: translateX(0);
-    }
-  }
-  
-  .fade-in {
-    animation: fadeIn 0.5s ease-in-out forwards;
-  }
-  
-  .fade-out {
-    animation: fadeOut 0.5s ease-in-out forwards;
-  }
-  
-  .glitch-out {
-    animation: glitchFade 0.3s ease-out forwards;
-  }
-  
   #preloader.hide {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.8s ease-out;
-  }
-  
-  #hello-text {
-    transition: opacity 0.3s ease-in-out;
   }
 </style>
 
@@ -128,7 +72,6 @@
       { text: 'Ciao', lang: 'Italian' },
       { text: 'こんにちは', lang: 'Japanese' },
       { text: 'Olá', lang: 'Portuguese' },
-      { text: 'Привет', lang: 'Russian' },
       { text: '你好', lang: 'Chinese' },
       { text: 'नमस्ते', lang: 'Hindi' },
       { text: 'Hej', lang: 'Swedish' },
@@ -136,7 +79,6 @@
     
     let currentIndex = 0;
     let progress = 0;
-    let isAnimating = false;
     
     const helloText = document.getElementById('hello-text');
     const languageLabel = document.getElementById('language-label');
@@ -153,25 +95,12 @@
     const label = languageLabel as HTMLElement;
     const bar = loadingBar as HTMLElement;
     const pre = preloader as HTMLElement;
-    
+
     function updateGreeting() {
-      if (isAnimating) return;
-      isAnimating = true;
-      
-      // Smooth fade out
-      hello.style.opacity = '0';
-      
-      setTimeout(() => {
-        // Update text
-        currentIndex = (currentIndex + 1) % greetings.length;
-        hello.textContent = greetings[currentIndex].text;
-        label.textContent = greetings[currentIndex].lang;
-        
-        // Smooth fade in
-        hello.style.opacity = '1';
-        
-        isAnimating = false;
-      }, 300);
+      // Instant swap — no fade, no delay
+      currentIndex = (currentIndex + 1) % greetings.length;
+      hello.textContent = greetings[currentIndex].text;
+      label.textContent = greetings[currentIndex].lang;
     }
     
     function updateProgress() {
@@ -198,27 +127,22 @@
     // Prevent scrolling during preloader
     document.body.style.overflow = 'hidden';
     
-    // Initial state
-    if (hello) {
-      hello.style.opacity = '1';
-    }
-    
-    // Change greeting every 550ms (smoother transitions)
+    // Change greeting every 440ms
     const greetingInterval = setInterval(() => {
       if (progress < 100) {
         updateGreeting();
       } else {
         clearInterval(greetingInterval);
       }
-    }, 550);
+    }, 440);
     
-    // Update progress every 50ms (total 5 seconds: 100% / 5000ms = 1% per 50ms)
+    // Update progress every 40ms (total ~4 seconds: 100% / 4000ms = 1% per 40ms)
     const progressInterval = setInterval(() => {
       updateProgress();
       if (progress >= 100) {
         clearInterval(progressInterval);
       }
-    }, 50);
+    }, 40);
     
     // Cleanup on page unload
     window.addEventListener('beforeunload', () => {

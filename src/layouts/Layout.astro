@@ -4,7 +4,7 @@ interface Props {
 }
 
 const { title } = Astro.props;
-import TargetCursor from '../components/TargetCursor';
+import TargetCursor from '../components/TargetCursor.astro';
 import Preloader from '../components/Preloader.astro';
 ---
 
@@ -17,7 +17,7 @@ import Preloader from '../components/Preloader.astro';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Climate+Crisis&family=Inter:wght@400;500;800&family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script>
       // Load Lucide icons with fallback CDN if primary fails (avoids 404 in some environments)
       (function() {
@@ -51,8 +51,8 @@ import Preloader from '../components/Preloader.astro';
     <!-- The Grain -->
     <div class="noise-overlay"></div>
     
-    <!-- Target Cursor Effect (client-only to avoid SSR issues) -->
-    <TargetCursor client:only="react" spinDuration={3.5} hideDefaultCursor={false} parallaxOn={true} hoverDuration={0.5} />
+    <!-- Target Cursor Effect -->
+    <TargetCursor spinDuration={3.5} hideDefaultCursor={false} parallaxOn={true} hoverDuration={0.5} />
     
     <slot />
     
@@ -75,6 +75,11 @@ import Preloader from '../components/Preloader.astro';
     --beam-black: #000000;
   }
   
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  
   body {
     background-color: var(--bg-concrete);
     color: var(--text-rebar);
@@ -91,6 +96,7 @@ import Preloader from '../components/Preloader.astro';
   a, button, input, textarea, select {
     cursor: none !important;
   }
+
   
   /* The Grain - Analog Noise */
   .noise-overlay {

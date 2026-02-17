@@ -2,9 +2,9 @@
 import { siteData } from '../data/portfolio';
 ---
 
-<section class="w-full border-beam-b grid grid-cols-1 lg:grid-cols-12 min-h-[90vh] relative">
-  <!-- The 100 Orange Squares Overlay - covers navbar + hero, scrolls away with content -->
-  <div id="grid-overlay" class="absolute top-[-5rem] left-0 right-0 z-[100] w-full h-[calc(100%+5rem)]"></div>
+<section id="about" class="w-full border-beam-b grid grid-cols-1 lg:grid-cols-12 min-h-[90vh] relative">
+  <!-- The 100 Orange Squares Overlay - covers entire viewport including navbar -->
+  <div id="grid-overlay" class="fixed inset-0 z-[300] w-full h-full" style="pointer-events: none;"></div>
   
   <!-- Left: The Visual -->
   <div class="lg:col-span-8 border-beam-r relative overflow-hidden group">
@@ -61,7 +61,7 @@ import { siteData } from '../data/portfolio';
   // Generate 100 squares (10x10 grid) for interactive reveal effect
   (function() {
     function initGridOverlay() {
-      const gridContainer = document.getElementById('grid-overlay');
+      var gridContainer = document.getElementById('grid-overlay');
       
       if (!gridContainer) {
         console.warn('Grid overlay container not found');
@@ -71,36 +71,49 @@ import { siteData } from '../data/portfolio';
       // Clear any existing squares (in case of re-run)
       gridContainer.innerHTML = '';
       
-      const totalSquares = 100;
+      var totalSquares = 100;
+      var fadedCount = 0;
 
-      for (let i = 0; i < totalSquares; i++) {
-        const square = document.createElement('div');
+      for (var i = 0; i < totalSquares; i++) {
+        var square = document.createElement('div');
         square.className = 'grid-square';
+        // Each square needs pointer-events so you can hover it
+        square.style.pointerEvents = 'auto';
         
         // Mouse hover interaction
         square.addEventListener('mouseover', function() {
-          this.classList.add('fade-out');
+          if (!this.classList.contains('fade-out')) {
+            this.classList.add('fade-out');
+            // fade-out CSS sets pointer-events: none, so events pass through
+            fadedCount++;
+            // Once all squares are gone, remove the overlay entirely
+            if (fadedCount >= totalSquares) {
+              gridContainer.remove();
+            }
+          }
         });
 
         // Touch support for mobile devices
         square.addEventListener('touchstart', function() {
-          this.classList.add('fade-out');
+          if (!this.classList.contains('fade-out')) {
+            this.classList.add('fade-out');
+            fadedCount++;
+            if (fadedCount >= totalSquares) {
+              gridContainer.remove();
+            }
+          }
         }, { passive: true });
 
         gridContainer.appendChild(square);
       }
-      
-      console.log('Grid overlay initialized with', totalSquares, 'squares');
     }
 
     // Multiple strategies to ensure it runs
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initGridOverlay);
     } else if (document.readyState === 'interactive') {
-      // DOM is ready but resources still loading
       requestAnimationFrame(initGridOverlay);
     } else {
-      // DOM and resources are ready
       initGridOverlay();
     }
   })();

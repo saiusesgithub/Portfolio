@@ -89,23 +89,23 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
       }
       const strength = activeStrengthRef.current.current;
       if (strength === 0) return;
-      
+
       const cursorX = gsap.getProperty(cursorRef.current, 'x') as number;
       const cursorY = gsap.getProperty(cursorRef.current, 'y') as number;
       const corners = Array.from(cornersRef.current);
-      
+
       let allLocked = true;
-      
+
       corners.forEach((corner, i) => {
         const currentX = gsap.getProperty(corner, 'x') as number;
         const currentY = gsap.getProperty(corner, 'y') as number;
         const targetX = targetCornerPositionsRef.current![i].x - cursorX;
         const targetY = targetCornerPositionsRef.current![i].y - cursorY;
-        
+
         // Check if we're close enough to lock
         const distanceX = Math.abs(targetX - currentX);
         const distanceY = Math.abs(targetY - currentY);
-        
+
         if (distanceX < 1 && distanceY < 1) {
           // Lock this corner in place
           gsap.set(corner, { x: targetX, y: targetY });
@@ -113,7 +113,7 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
           allLocked = false;
           const finalX = currentX + (targetX - currentX) * strength;
           const finalY = currentY + (targetY - currentY) * strength;
-          
+
           gsap.to(corner, {
             x: finalX,
             y: finalY,
@@ -123,7 +123,7 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
           });
         }
       });
-      
+
       // If all corners are locked, stop the ticker
       if (allLocked) {
         isLockedRef.current = true;
@@ -167,11 +167,11 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
 
     const enterHandler = (e: MouseEvent) => {
       const directTarget = e.target as Element;
-      
+
       // Find the closest matching target
       const target = directTarget.closest(targetSelector);
       if (!target || !cursorRef.current || !cornersRef.current) return;
-      
+
       // If we're already on this exact target, do nothing to prevent shaking
       if (activeTarget === target) return;
       if (activeTarget) {
@@ -304,6 +304,7 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
   return (
     <div
       ref={cursorRef}
+      id="custom-cursor"
       className="fixed top-0 left-0 w-0 h-0 pointer-events-none z-[9999]"
       style={{ willChange: 'transform' }}
     >

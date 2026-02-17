@@ -1,0 +1,279 @@
+---
+// TargetCursor — Pure Astro (no React)
+// Custom crosshair cursor with corner-lock hover effect using GSAP
+interface Props {
+  targetSelector?: string;
+  spinDuration?: number;
+  hideDefaultCursor?: boolean;
+  hoverDuration?: number;
+}
+
+const {
+  targetSelector = '.cursor-target',
+  spinDuration = 2,
+  hideDefaultCursor = true,
+  hoverDuration = 0.2,
+} = Astro.props;
+---
+
+<div
+  id="custom-cursor"
+  class="fixed top-0 left-0 w-0 h-0 pointer-events-none z-[9998]"
+  style="will-change: transform; opacity: 0;"
+  data-cfg-selector={targetSelector}
+  data-cfg-spin={String(spinDuration)}
+  data-cfg-hide-cursor={String(hideDefaultCursor)}
+  data-cfg-hover-dur={String(hoverDuration)}
+>
+  <div
+    id="cursor-dot"
+    class="absolute top-1/2 left-1/2 w-1 h-1 bg-safety-orange rounded-full -translate-x-1/2 -translate-y-1/2"
+    style="will-change: transform;"
+  ></div>
+  <div class="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-safety-orange -translate-x-[150%] -translate-y-[150%] border-r-0 border-b-0" style="will-change: transform;"></div>
+  <div class="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-safety-orange translate-x-1/2 -translate-y-[150%] border-l-0 border-b-0" style="will-change: transform;"></div>
+  <div class="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-safety-orange translate-x-1/2 translate-y-1/2 border-l-0 border-t-0" style="will-change: transform;"></div>
+  <div class="target-cursor-corner absolute top-1/2 left-1/2 w-3 h-3 border-[3px] border-safety-orange -translate-x-[150%] translate-y-1/2 border-r-0 border-t-0" style="will-change: transform;"></div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  function initTargetCursor() {
+    // === Mobile detection ===
+    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 768;
+    const ua = (navigator.userAgent || '').toLowerCase();
+    const isMobile = (hasTouchScreen && isSmallScreen) || /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua);
+
+    const cursor = document.getElementById('custom-cursor');
+    const dot = document.getElementById('cursor-dot');
+
+    if (!cursor || !dot) {
+      console.warn('[TargetCursor] Elements not found');
+      return;
+    }
+
+    if (isMobile) {
+      cursor.style.display = 'none';
+      return;
+    }
+
+    // === Read config ===
+    const targetSelector = cursor.dataset.cfgSelector || '.cursor-target';
+    const spinDuration = parseFloat(cursor.dataset.cfgSpin || '2');
+    const hoverDuration = parseFloat(cursor.dataset.cfgHoverDur || '0.2');
+
+    // === Constants ===
+    const BORDER_WIDTH = 3;
+    const CORNER_SIZE = 12;
+
+    // === State ===
+    const corners = Array.from(cursor.querySelectorAll('.target-cursor-corner'));
+    let activeTarget: Element | null = null;
+    let currentLeaveHandler: (() => void) | null = null;
+    let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
+    let isLocked = false;
+    let targetCornerPositions: { x: number; y: number }[] | null = null;
+    let activeStrength = { current: 0 };
+    let spinTl: gsap.core.Timeline | null = null;
+
+    // === Init cursor position (centered, invisible until preloader ends) ===
+    gsap.set(cursor, {
+      xPercent: -50,
+      yPercent: -50,
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+    });
+
+    // === Show cursor after preloader ===
+    function revealCursor() {
+      gsap.to(cursor, { opacity: 1, duration: 0.3 });
+    }
+
+    const preloaderEl = document.getElementById('preloader');
+    if (preloaderEl) {
+      const obs = new MutationObserver(() => {
+        if (!document.getElementById('preloader')) {
+          revealCursor();
+          obs.disconnect();
+        }
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+    } else {
+      revealCursor();
+    }
+
+    // === Spin animation ===
+    function createSpinTimeline() {
+      if (spinTl) spinTl.kill();
+      spinTl = gsap.timeline({ repeat: -1 })
+        .to(cursor, { rotation: '+=360', duration: spinDuration, ease: 'none' });
+    }
+    createSpinTimeline();
+
+    // === Cleanup helper ===
+    function cleanupTarget(target: Element) {
+      if (currentLeaveHandler) {
+        target.removeEventListener('mouseleave', currentLeaveHandler);
+      }
+      currentLeaveHandler = null;
+    }
+
+    // === Ticker — interpolates corners to target positions ===
+    const tickerFn = () => {
+      if (!targetCornerPositions || isLocked) return;
+      const strength = activeStrength.current;
+      if (strength === 0) return;
+
+      const cursorX = gsap.getProperty(cursor, 'x') as number;
+      const cursorY = gsap.getProperty(cursor, 'y') as number;
+
+      let allLocked = true;
+
+      corners.forEach((corner, i) => {
+        const currentX = gsap.getProperty(corner, 'x') as number;
+        const currentY = gsap.getProperty(corner, 'y') as number;
+        const targetX = targetCornerPositions![i].x - cursorX;
+        const targetY = targetCornerPositions![i].y - cursorY;
+
+        const distX = Math.abs(targetX - currentX);
+        const distY = Math.abs(targetY - currentY);
+
+        if (distX < 1 && distY < 1) {
+          gsap.set(corner, { x: targetX, y: targetY });
+        } else {
+          allLocked = false;
+          gsap.to(corner, {
+            x: currentX + (targetX - currentX) * strength,
+            y: currentY + (targetY - currentY) * strength,
+            duration: 0.05,
+            ease: 'power1.out',
+            overwrite: 'auto',
+          });
+        }
+      });
+
+      if (allLocked) {
+        isLocked = true;
+        gsap.ticker.remove(tickerFn);
+      }
+    };
+
+    // === Mouse move ===
+    window.addEventListener('mousemove', (e) => {
+      gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: 'power3.out' });
+    });
+
+    // === Scroll — check if still over target ===
+    window.addEventListener('scroll', () => {
+      if (!activeTarget) return;
+      const mx = gsap.getProperty(cursor, 'x') as number;
+      const my = gsap.getProperty(cursor, 'y') as number;
+      const el = document.elementFromPoint(mx, my);
+      const still = el && (el === activeTarget || el.closest(targetSelector) === activeTarget);
+      if (!still && currentLeaveHandler) currentLeaveHandler();
+    }, { passive: true });
+
+    // === Click feedback ===
+    window.addEventListener('mousedown', () => {
+      gsap.to(dot, { scale: 0.7, duration: 0.3 });
+      gsap.to(cursor, { scale: 0.9, duration: 0.2 });
+    });
+    window.addEventListener('mouseup', () => {
+      gsap.to(dot, { scale: 1, duration: 0.3 });
+      gsap.to(cursor, { scale: 1, duration: 0.2 });
+    });
+
+    // === Hover handler — lock corners onto .cursor-target ===
+    window.addEventListener('mouseover', (e) => {
+      const directTarget = e.target as Element;
+      const target = directTarget.closest(targetSelector);
+      if (!target) return;
+
+      // Already on this target — skip
+      if (activeTarget === target) return;
+      if (activeTarget) cleanupTarget(activeTarget);
+      if (resumeTimeout) { clearTimeout(resumeTimeout); resumeTimeout = null; }
+
+      activeTarget = target;
+      isLocked = false;
+      corners.forEach(c => gsap.killTweensOf(c));
+      gsap.killTweensOf(cursor, 'rotation');
+      spinTl?.pause();
+      gsap.set(cursor, { rotation: 0 });
+
+      const rect = target.getBoundingClientRect();
+      const cx = gsap.getProperty(cursor, 'x') as number;
+      const cy = gsap.getProperty(cursor, 'y') as number;
+
+      targetCornerPositions = [
+        { x: rect.left - BORDER_WIDTH, y: rect.top - BORDER_WIDTH },
+        { x: rect.right + BORDER_WIDTH - CORNER_SIZE, y: rect.top - BORDER_WIDTH },
+        { x: rect.right + BORDER_WIDTH - CORNER_SIZE, y: rect.bottom + BORDER_WIDTH - CORNER_SIZE },
+        { x: rect.left - BORDER_WIDTH, y: rect.bottom + BORDER_WIDTH - CORNER_SIZE },
+      ];
+
+      gsap.ticker.add(tickerFn);
+      gsap.to(activeStrength, { current: 1, duration: hoverDuration, ease: 'power2.out' });
+
+      corners.forEach((corner, i) => {
+        gsap.to(corner, {
+          x: targetCornerPositions![i].x - cx,
+          y: targetCornerPositions![i].y - cy,
+          duration: 0.2,
+          ease: 'power2.out',
+        });
+      });
+
+      // === Leave handler ===
+      const leaveHandler = () => {
+        gsap.ticker.remove(tickerFn);
+        isLocked = false;
+        targetCornerPositions = null;
+        gsap.set(activeStrength, { current: 0, overwrite: true });
+        activeTarget = null;
+
+        gsap.killTweensOf(corners);
+        const positions = [
+          { x: -CORNER_SIZE * 1.5, y: -CORNER_SIZE * 1.5 },
+          { x: CORNER_SIZE * 0.5, y: -CORNER_SIZE * 1.5 },
+          { x: CORNER_SIZE * 0.5, y: CORNER_SIZE * 0.5 },
+          { x: -CORNER_SIZE * 1.5, y: CORNER_SIZE * 0.5 },
+        ];
+        const tl = gsap.timeline();
+        corners.forEach((corner, idx) => {
+          tl.to(corner, { x: positions[idx].x, y: positions[idx].y, duration: 0.3, ease: 'power3.out' }, 0);
+        });
+
+        resumeTimeout = setTimeout(() => {
+          if (!activeTarget && spinTl) {
+            const rot = (gsap.getProperty(cursor, 'rotation') as number) % 360;
+            spinTl.kill();
+            spinTl = gsap.timeline({ repeat: -1 })
+              .to(cursor, { rotation: '+=360', duration: spinDuration, ease: 'none' });
+            gsap.to(cursor, {
+              rotation: rot + 360,
+              duration: spinDuration * (1 - rot / 360),
+              ease: 'none',
+              onComplete: () => spinTl?.restart(),
+            });
+          }
+          resumeTimeout = null;
+        }, 50);
+
+        cleanupTarget(target);
+      };
+
+      currentLeaveHandler = leaveHandler;
+      target.addEventListener('mouseleave', leaveHandler);
+    }, true); // capturing phase
+  }
+
+  // Ensure DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTargetCursor);
+  } else {
+    initTargetCursor();
+  }
+</script>

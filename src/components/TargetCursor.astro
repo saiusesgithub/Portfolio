@@ -256,7 +256,7 @@ const {
               rotation: rot + 360,
               duration: spinDuration * (1 - rot / 360),
               ease: 'none',
-              onComplete: () => spinTl?.restart(),
+              onComplete: () => { spinTl?.restart(); },
             });
           }
           resumeTimeout = null;

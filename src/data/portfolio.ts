@@ -4,9 +4,9 @@ export const siteData = {
   title: "Full-Stack Developer & Designer",
   tagline: "Building Digital Infrastructure.",
   about: "I craft scalable web applications with clean code and uncompromising design. Specializing in modern JavaScript frameworks and system architecture.",
-  email: "contact@alexforge.dev",
-  location: "San Francisco, CA",
-  coordinates: "37.7749° N, 122.4194° W",
+  email: "saisrujanpunati@gmail.com",
+  location: "Hyderabad, India",
+  coordinates: "17.3850° N, 78.4867° E",
   status: "AVAILABLE FOR WORK"
 };
 
@@ -113,7 +113,6 @@ export const experience = [
 ];
 
 export const socialLinks = [
-  { name: "GitHub", url: "https://github.com", icon: "github" },
-  { name: "LinkedIn", url: "https://linkedin.com", icon: "linkedin" },
-  { name: "Twitter", url: "https://twitter.com", icon: "twitter" }
+  { name: "GitHub", url: "https://github.com/saiusesgithub" },
+  { name: "LinkedIn", url: "https://linkedin.com/in/saisrujanpunati" },
 ];

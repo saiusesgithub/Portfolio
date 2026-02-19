@@ -1,28 +1,246 @@
 ---
-import { skills } from '../data/portfolio';
-import SkillCard from './SkillCard.astro';
+const iconSlug: Record<string, string> = {
+  'AWS': 'amazonwebservices', 'Google Cloud': 'googlecloud', 'Oracle Cloud': 'oracle',
+  'Cloudflare': 'cloudflare', 'Docker': 'docker', 'Terraform': 'terraform',
+  'GitHub Actions': 'githubactions', 'Git': 'git', 'Linux': 'linux',
+  'Flask': 'flask', 'FastAPI': 'fastapi', 'MySQL': 'mysql', 'SQLite': 'sqlite',
+  'Firebase': 'firebase', 'Supabase': 'supabase', 'Flutter': 'flutter',
+  'Dart': 'dart', 'Python': 'python', 'C': 'c', 'R': 'r', 'Bash': 'gnubash',
+  'VS Code': 'vscodium', 'Figma': 'figma', 'Notion': 'notion',
+  'Jira': 'jira', 'GitHub Codespaces': 'github', 'Ubuntu': 'ubuntu',
+  'Pop!_OS': 'popos', 'Kali Linux': 'kalilinux', 'Lubuntu': 'lubuntu',
+  'Raspbian': 'raspberrypi', 'Ansible': 'ansible',
+  'Kubernetes': 'kubernetes',
+};
+
+function getIcon(name: string) {
+  const slug = iconSlug[name];
+  return slug ? `https://cdn.simpleicons.org/${slug}/000000` : null;
+}
+
+interface Tech { name: string; items?: string[]; }
+
+const skillCategories = [
+  {
+    id: '01', title: 'Cloud Platforms',
+    description: 'Multi-cloud infrastructure design and deployment across major providers.',
+    techs: [
+      { name: 'AWS', items: ['EC2', 'S3', 'Lambda', 'IAM', 'VPC'] },
+      { name: 'Google Cloud', items: ['Compute Engine', 'Cloud Storage'] },
+      { name: 'Oracle Cloud' },
+      { name: 'Cloudflare' },
+    ] as Tech[],
+  },
+  {
+    id: '02', title: 'DevOps & Automation',
+    description: 'CI/CD pipelines, containerization, and infrastructure automation.',
+    techs: [
+      { name: 'Docker', items: ['Compose', 'Swarm'] },
+      { name: 'Terraform', items: ['State Management'] },
+      { name: 'GitHub Actions', items: ['Workflows', 'YAML Pipelines'] },
+      { name: 'Git', items: ['Branching', 'Merging', 'Git Flow'] },
+      { name: 'Linux' },
+    ] as Tech[],
+  },
+  {
+    id: '03', title: 'Backend & Databases',
+    description: 'REST APIs, relational databases, and cloud-hosted backend services.',
+    techs: [
+      { name: 'Flask' }, { name: 'FastAPI' }, { name: 'MySQL' },
+      { name: 'SQLite' },
+      { name: 'Firebase', items: ['Firestore', 'Auth', 'Hosting'] },
+      { name: 'Supabase' },
+    ] as Tech[],
+  },
+  {
+    id: '04', title: 'Mobile Development',
+    description: 'Cross-platform mobile applications with native performance.',
+    techs: [{ name: 'Flutter' }, { name: 'Dart' }] as Tech[],
+  },
+  {
+    id: '05', title: 'Languages & Scripting',
+    description: 'Multi-paradigm programming and automation scripting.',
+    techs: [
+      { name: 'Python' }, { name: 'C' }, { name: 'R' },
+      { name: 'Bash' }, { name: 'YAML' },
+    ] as Tech[],
+  },
+  {
+    id: '06', title: 'Tools & Platforms',
+    description: 'Development environments and collaboration platforms.',
+    techs: [
+      { name: 'VS Code' }, { name: 'Figma' }, { name: 'Notion' },
+      { name: 'Jira' }, { name: 'Antigravity' }, { name: 'GitHub Codespaces' },
+    ] as Tech[],
+  },
+  {
+    id: '07', title: 'Networking & Security',
+    description: 'Network protocols, encryption, and access management.',
+    techs: [
+      { name: 'SSH' }, { name: 'DNS' }, { name: 'SSL/TLS' },
+      { name: 'IAM' }, { name: 'VPN' }, { name: 'HTTP/HTTPS' },
+    ] as Tech[],
+  },
+  {
+    id: '08', title: 'Operating Systems',
+    description: 'Linux distributions and system administration.',
+    techs: [
+      { name: 'Ubuntu' }, { name: 'Pop!_OS' }, { name: 'Kali Linux' },
+      { name: 'Linux Lite' }, { name: 'Lubuntu' }, { name: 'Raspbian' },
+      { name: 'WSL' },
+    ] as Tech[],
+  },
+];
+
+const currentlyExploring = [
+  { name: 'Kubernetes' }, { name: 'Ansible' },
+] as Tech[];
+
+// Category SVG icons (monoline technical style)
+const categoryIcons: Record<string, string> = {
+  '01': '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
+  '02': '<circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2m-9-11h2m18 0h2m-3.3-7.7-1.4 1.4M4.7 19.3l1.4-1.4m0-11.8L4.7 4.7m14.6 14.6-1.4-1.4"/>',
+  '03': '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>',
+  '04': '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>',
+  '05': '<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>',
+  '06': '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  '07': '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  '08': '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+};
 ---
 
 <section id="skills" class="w-full border-beam-b">
-  <div class="grid grid-cols-1 lg:grid-cols-3">
-    <!-- Col 1: Header -->
-    <div class="border-beam-b lg:border-b-0 lg:border-beam-r p-8 lg:p-12 bg-white lg:bg-transparent">
-      <h2 class="text-5xl font-extrabold uppercase tracking-tight-custom leading-none mb-4">
-        Core<br />Skills.
-      </h2>
-      <div class="w-full h-[2px] bg-black mb-4"></div>
-      <p class="font-tech text-xs uppercase tracking-widest text-safety-orange">
-        /// EXPERTISE AREAS
-      </p>
+  <div class="grid grid-cols-1 lg:grid-cols-12">
+
+    <!-- LEFT PANEL: Sticky Heading -->
+    <div class="lg:col-span-4 border-beam-b lg:border-b-0 lg:border-beam-r p-8 lg:p-12 bg-white lg:bg-transparent">
+      <div class="lg:sticky lg:top-28">
+        <p class="font-tech text-xs text-safety-orange uppercase tracking-widest mb-4">
+          /// Tech Stack
+        </p>
+        <h2 class="text-5xl lg:text-6xl font-extrabold uppercase tracking-tight-custom leading-[0.85] mb-6">
+          Core<br />Skills.
+        </h2>
+        <div class="w-16 h-[3px] bg-safety-orange mb-6"></div>
+        <p class="text-sm font-medium leading-relaxed opacity-70 max-w-sm">
+          Architecting cloud systems, automating pipelines, and building everything in between.
+        </p>
+      </div>
     </div>
 
-    <!-- Skill Cards -->
-    {skills.map((skill) => (
-      <SkillCard 
-        title={skill.title}
-        icon={skill.icon}
-        description={skill.description}
-      />
-    ))}
+    <!-- RIGHT PANEL: Stacked Skill Rows -->
+    <div class="lg:col-span-8">
+      {skillCategories.map((cat, idx) => (
+        <div class={`cursor-target skill-row group relative p-8 lg:p-10 hover:bg-white transition-colors duration-0 ${idx < skillCategories.length ? 'border-beam-b' : ''}`}>
+          <!-- Corner brackets on hover -->
+          <div class="absolute top-3 left-3 w-4 h-4 border-l-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+          <div class="absolute top-3 right-3 w-4 h-4 border-r-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+          <div class="absolute bottom-3 left-3 w-4 h-4 border-l-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+          <div class="absolute bottom-3 right-3 w-4 h-4 border-r-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+
+          <!-- Row Header -->
+          <div class="flex items-start gap-4 lg:gap-6">
+            <!-- Spec Number + Category Icon -->
+            <div class="flex flex-col items-center gap-2 shrink-0">
+              <span class="font-tech text-3xl lg:text-4xl font-bold text-gray-200 group-hover:text-safety-orange transition-colors duration-200 leading-none select-none">
+                {cat.id}
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-300 group-hover:text-safety-orange transition-colors duration-200">
+                <Fragment set:html={categoryIcons[cat.id]} />
+              </svg>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <!-- Title + Count -->
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-1">
+                <h3 class="text-lg lg:text-xl font-extrabold uppercase tracking-tight">{cat.title}</h3>
+                <span class="font-tech text-[10px] text-gray-400 uppercase tracking-widest shrink-0">
+                  {cat.techs.length} {cat.techs.length === 1 ? 'tool' : 'tools'}
+                </span>
+              </div>
+              <p class="text-xs text-gray-500 mb-4 max-w-lg">{cat.description}</p>
+
+              <!-- Tech Pills -->
+              <div class="flex flex-wrap gap-2">
+                {cat.techs.map((tech) => (
+                  <span class="tech-pill inline-flex items-center gap-2 px-3 py-2 border-2 border-black text-xs font-bold uppercase tracking-wider hover:bg-black hover:text-white transition-colors duration-0 group/pill">
+                    {getIcon(tech.name) ? (
+                      <img
+                        src={getIcon(tech.name)!}
+                        alt=""
+                        class="w-4 h-4 group-hover/pill:invert transition-all duration-0"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="w-1.5 h-1.5 rounded-full bg-safety-orange shrink-0"></span>
+                    )}
+                    <span>{tech.name}</span>
+                    {tech.items && (
+                      <span class="text-[9px] font-normal text-gray-400 group-hover/pill:text-gray-300 tracking-normal normal-case">
+                        {tech.items.join(' · ')}
+                      </span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <!-- CURRENTLY EXPLORING -->
+      <div class="cursor-target group relative p-8 lg:p-10 hover:bg-white transition-colors duration-0 bg-gray-50">
+        <div class="absolute top-3 left-3 w-4 h-4 border-l-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+        <div class="absolute top-3 right-3 w-4 h-4 border-r-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+        <div class="absolute bottom-3 left-3 w-4 h-4 border-l-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+        <div class="absolute bottom-3 right-3 w-4 h-4 border-r-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+
+        <div class="flex items-start gap-4 lg:gap-6">
+          <div class="flex flex-col items-center gap-2 shrink-0">
+            <span class="font-tech text-3xl lg:text-4xl font-bold text-safety-orange leading-none select-none">
+              →
+            </span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-safety-orange">
+              <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline gap-2 mb-1">
+              <h3 class="text-lg lg:text-xl font-extrabold uppercase tracking-tight text-safety-orange">Currently Exploring</h3>
+              <span class="font-tech text-[10px] text-gray-400 uppercase tracking-widest animate-pulse">IN PROGRESS</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-4">Technologies I'm actively learning and experimenting with.</p>
+            <div class="flex flex-wrap gap-2">
+              {currentlyExploring.map((tech) => (
+                <span class="tech-pill inline-flex items-center gap-2 px-3 py-2 border-2 border-dashed border-safety-orange text-xs font-bold uppercase tracking-wider text-safety-orange hover:bg-safety-orange hover:text-white transition-colors duration-0 group/pill">
+                  {getIcon(tech.name) ? (
+                    <img
+                      src={getIcon(tech.name)!}
+                      alt=""
+                      class="w-4 h-4 group-hover/pill:invert transition-all duration-0"
+                      loading="lazy"
+                      style="filter: invert(22%) sepia(88%) saturate(6713%) hue-rotate(3deg) brightness(101%) contrast(108%);"
+                    />
+                  ) : (
+                    <span class="w-1.5 h-1.5 rounded-full bg-safety-orange shrink-0"></span>
+                  )}
+                  {tech.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<style is:global>
+  .tech-pill img {
+    transition: filter 0.1s;
+  }
+  .tech-pill:hover img {
+    filter: invert(1) !important;
+  }
+</style>

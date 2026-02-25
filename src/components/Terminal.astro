@@ -1,0 +1,710 @@
+---
+// Inline interactive terminal section — embedded directly in the page
+---
+
+<section id="terminal" class="w-full bg-black border-t-4 border-black relative overflow-hidden">
+
+  <!-- Caution tape top -->
+  <div class="w-full h-4 bg-[repeating-linear-gradient(45deg,#000,#000_10px,#ff4500_10px,#ff4500_20px)] border-b-2 border-[#222]"></div>
+
+  <!-- Section header -->
+  <div class="border-b-2 border-[#1a1a1a] px-6 lg:px-12 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="w-2 h-2 bg-safety-orange rounded-full animate-pulse"></span>
+      <span class="font-tech text-[10px] text-[#555] uppercase tracking-[0.3em]">// INTERACTIVE_TERMINAL</span>
+    </div>
+    <div class="flex items-center gap-3 font-tech text-[10px] uppercase tracking-widest">
+      <span class="text-[#333]">saisrujan@portfolio</span>
+      <span class="text-[#222]">|</span>
+      <span class="text-[#333]">SHELL: brutalist-term v1.0</span>
+    </div>
+  </div>
+
+  <!-- Terminal body -->
+  <div class="px-6 lg:px-12 py-6">
+    <div id="terminal-container" class="border-2 border-[#222] shadow-[6px_6px_0_0_#ff4500] max-w-5xl mx-auto flex flex-col terminal-glow" style="height: 440px;">
+
+      <!-- Title bar -->
+      <div class="bg-[#0a0a0a] border-b-2 border-[#222] px-4 py-2 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="flex gap-1.5">
+            <span class="w-2.5 h-2.5 border border-[#333] bg-[#ff5f56]"></span>
+            <span class="w-2.5 h-2.5 border border-[#333] bg-[#ffbd2e]"></span>
+            <span class="w-2.5 h-2.5 border border-[#333] bg-[#27c93f]"></span>
+          </div>
+          <span class="font-mono text-[10px] text-[#444] uppercase tracking-widest ml-2">saisrujan@portfolio:~$</span>
+        </div>
+        <span class="font-mono text-[10px] text-[#333] uppercase tracking-widest">type 'help' to start</span>
+      </div>
+
+      <!-- Boot screen (shown initially) -->
+      <div id="terminal-boot-screen" class="bg-black flex-1 flex flex-col items-center justify-center gap-6 relative terminal-scanlines">
+        <div class="text-center">
+          <div class="font-mono text-[10px] text-[#888] uppercase tracking-[0.4em] mb-4">// SYSTEM OFFLINE</div>
+          <div class="font-mono text-[40px] lg:text-[56px] font-bold text-[#444] leading-none select-none">TERMINAL</div>
+        </div>
+        <button id="terminal-boot-btn" class="border-2 border-safety-orange bg-black text-safety-orange font-mono text-[12px] uppercase tracking-widest px-8 py-3 shadow-[4px_4px_0_0_#ff4500] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-0 terminal-text-glow" style="cursor: pointer !important;">
+          ⚡ BOOT SYSTEM
+        </button>
+        <div class="font-mono text-[9px] text-[#777] uppercase tracking-widest">click to initialize terminal</div>
+      </div>
+
+      <!-- Output area (hidden until booted) -->
+      <div id="terminal-body" class="bg-black flex-1 overflow-y-auto p-4 font-mono text-[12px] leading-relaxed flex flex-col gap-0.5 terminal-scanlines" style="display:none;">
+      </div>
+
+      <!-- Input line (hidden until booted) -->
+      <div id="terminal-input-bar" class="bg-[#050505] border-t-2 border-[#222] px-4 py-3 flex items-center gap-2 shrink-0" style="display:none;">
+        <span class="font-mono text-[12px] text-safety-orange shrink-0 terminal-text-glow">▸</span>
+        <div class="flex-1 flex items-center relative">
+          <input
+            id="terminal-input"
+            type="text"
+            class="w-full bg-transparent font-mono text-[12px] text-white outline-none border-none terminal-text-glow"
+            placeholder="enter command..."
+            autocomplete="off"
+            spellcheck="false"
+            style="cursor: text !important; caret-color: transparent;"
+          />
+          <span id="terminal-cursor" class="terminal-cursor"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hint below terminal -->
+    <div class="max-w-5xl mx-auto mt-3 flex flex-wrap items-center justify-between font-tech text-[10px] text-[#666] uppercase tracking-widest px-1 gap-2">
+      <span>↑/↓ = HISTORY &nbsp;|&nbsp; ENTER = EXECUTE</span>
+      <span class="text-safety-orange">TRY: neofetch, skills, coffee, matrix, snake, sudo rm -rf /</span>
+    </div>
+  </div>
+
+</section>
+
+<style is:global>
+  /* Glowing text for terminal orange elements */
+  .terminal-text-glow {
+    text-shadow: 0 0 6px rgba(255, 69, 0, 0.4), 0 0 12px rgba(255, 69, 0, 0.15);
+  }
+
+  /* Blinking block cursor — positioned via JS */
+  .terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background-color: #ff4500;
+    animation: cursor-blink 1s step-end infinite;
+    vertical-align: middle;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    box-shadow: 0 0 6px rgba(255, 69, 0, 0.5);
+    pointer-events: none;
+  }
+  @keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+  }
+
+  /* Scanline overlay on terminal body */
+  .terminal-scanlines {
+    position: relative;
+  }
+  .terminal-scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.015) 2px,
+      rgba(255,255,255,0.015) 4px
+    );
+  }
+
+  /* Glow on terminal container */
+  .terminal-glow {
+    box-shadow: 6px 6px 0 0 #ff4500, 0 0 30px rgba(255, 69, 0, 0.08);
+  }
+</style>
+
+<script is:inline>
+(function() {
+  var body       = document.getElementById('terminal-body');
+  var input      = document.getElementById('terminal-input');
+  var container  = document.getElementById('terminal-container');
+  var bootScreen = document.getElementById('terminal-boot-screen');
+  var bootBtn    = document.getElementById('terminal-boot-btn');
+  var inputBar   = document.getElementById('terminal-input-bar');
+  var cursorEl   = document.getElementById('terminal-cursor');
+  if (!body || !input || !container || !bootScreen || !bootBtn || !inputBar || !cursorEl) return;
+
+  var cmdHistory = [];
+  var histIdx = -1;
+  var startTime = Date.now();
+  var booted = false;
+  var snakeActive = false;
+  var snakeInterval = null;
+
+  // ── Cursor position tracking ────
+  function updateCursorPos() {
+    // Create a hidden measurer span
+    var measurer = document.createElement('span');
+    measurer.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;font:inherit;';
+    measurer.textContent = input.value.slice(0, input.selectionStart) || '';
+    input.parentElement.appendChild(measurer);
+    var w = measurer.offsetWidth;
+    input.parentElement.removeChild(measurer);
+    cursorEl.style.left = w + 'px';
+  }
+  input.addEventListener('input', updateCursorPos);
+  input.addEventListener('click', updateCursorPos);
+  input.addEventListener('keyup', updateCursorPos);
+  input.addEventListener('focus', function() { cursorEl.style.display = 'inline-block'; updateCursorPos(); });
+  input.addEventListener('blur', function() { cursorEl.style.display = 'none'; });
+
+  // ── FIGLET-style block letters (simplified 5-line font) ──
+  var FIGLET_FONT = {
+    'A': ['  █  ','█   █','█████','█   █','█   █'],
+    'B': ['████ ','█   █','████ ','█   █','████ '],
+    'C': [' ████','█    ','█    ','█    ',' ████'],
+    'D': ['████ ','█   █','█   █','█   █','████ '],
+    'E': ['█████','█    ','████ ','█    ','█████'],
+    'F': ['█████','█    ','████ ','█    ','█    '],
+    'G': [' ████','█    ','█  ██','█   █',' ████'],
+    'H': ['█   █','█   █','█████','█   █','█   █'],
+    'I': ['█████','  █  ','  █  ','  █  ','█████'],
+    'J': ['█████','   █ ','   █ ','█  █ ',' ██  '],
+    'K': ['█  █ ','█ █  ','██   ','█ █  ','█  █ '],
+    'L': ['█    ','█    ','█    ','█    ','█████'],
+    'M': ['█   █','██ ██','█ █ █','█   █','█   █'],
+    'N': ['█   █','██  █','█ █ █','█  ██','█   █'],
+    'O': [' ███ ','█   █','█   █','█   █',' ███ '],
+    'P': ['████ ','█   █','████ ','█    ','█    '],
+    'Q': [' ███ ','█   █','█ █ █','█  █ ',' ██ █'],
+    'R': ['████ ','█   █','████ ','█ █  ','█  █ '],
+    'S': [' ████','█    ',' ███ ','    █','████ '],
+    'T': ['█████','  █  ','  █  ','  █  ','  █  '],
+    'U': ['█   █','█   █','█   █','█   █',' ███ '],
+    'V': ['█   █','█   █','█   █',' █ █ ','  █  '],
+    'W': ['█   █','█   █','█ █ █','██ ██','█   █'],
+    'X': ['█   █',' █ █ ','  █  ',' █ █ ','█   █'],
+    'Y': ['█   █',' █ █ ','  █  ','  █  ','  █  '],
+    'Z': ['█████','   █ ','  █  ',' █   ','█████'],
+    '0': [' ███ ','█  ██','█ █ █','██  █',' ███ '],
+    '1': ['  █  ',' ██  ','  █  ','  █  ','█████'],
+    '2': [' ███ ','█   █','  ██ ',' █   ','█████'],
+    '3': ['████ ','    █',' ██  ','    █','████ '],
+    '4': ['█   █','█   █','█████','    █','    █'],
+    '5': ['█████','█    ','████ ','    █','████ '],
+    '6': [' ███ ','█    ','████ ','█   █',' ███ '],
+    '7': ['█████','   █ ','  █  ',' █   ','█    '],
+    '8': [' ███ ','█   █',' ███ ','█   █',' ███ '],
+    '9': [' ███ ','█   █',' ████','    █',' ███ '],
+    ' ': ['     ','     ','     ','     ','     '],
+    '!': ['  █  ','  █  ','  █  ','     ','  █  '],
+    '.': ['     ','     ','     ','     ','  █  '],
+    '-': ['     ','     ','█████','     ','     '],
+    '_': ['     ','     ','     ','     ','█████'],
+  };
+
+  // ── ASCII Art ───────────────────
+  var ASCII_LOGO = [
+    '  ____    _    ___   ____  ____  _   _     _   _    _  _   ',
+    ' / ___|  / \\  |_ _| / ___||  _ \\| | | |   | | / \\  | \\| |  ',
+    ' \\___ \\ / _ \\  | |  \\___ \\| |_) | | | |_  | |/ _ \\ |  ` |  ',
+    '  ___) / ___ \\ | |   ___) |  _ <| |_| | |_| / ___ \\| |\\  |  ',
+    ' |____/_/   \\_\\___| |____/|_| \\_\\\\___/ \\___/_/   \\_\\_| \\_|  ',
+  ];
+
+  var ASCII_COFFEE = [
+    '    ( (',
+    '     ) )',
+    '  ........',
+    '  |      |]',
+    '  \\      / ',
+    '   `----\'  ',
+  ];
+
+  var MOTD_QUOTES = [
+    '"Talk is cheap. Show me the code." — Linus Torvalds',
+    '"It works on my machine." — Every developer ever',
+    '"There are only two hard things: cache invalidation and naming things." — Phil Karlton',
+    '"First, solve the problem. Then, write the code." — John Johnson',
+    '"The best error message is the one that never shows up." — Thomas Fuchs',
+    '"Code is like humor. When you have to explain it, it\'s bad." — Cory House',
+    '"Any fool can write code that a computer can understand." — Martin Fowler',
+    '"rm -rf / solves all problems. Including your career." — Anonymous SRE',
+    '"Infrastructure as code, coffee as fuel." — DevOps Proverb',
+    '"chmod 777? That\'s not a solution, that\'s a surrender." — Unknown',
+  ];
+
+  // ── Color helper ────────────────
+  function c(text, color) {
+    var colors = { orange:'#ff4500', green:'#22c55e', white:'#fff', dim:'#555', yellow:'#ffbd2e', red:'#ff5f56' };
+    var style = 'color:' + (colors[color] || color);
+    if (color === 'orange') style += ';text-shadow:0 0 6px rgba(255,69,0,0.3)';
+    return '<span style="' + style + '">' + text + '</span>';
+  }
+
+  function getUptime() {
+    var ms = Date.now() - startTime;
+    var s = Math.floor(ms / 1000); var m = Math.floor(s / 60); var h = Math.floor(m / 60);
+    return String(h).padStart(2,'0') + ':' + String(m%60).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+  }
+
+  // ── Commands ────────────────────
+  var commands = {
+    help: function() {
+      return [
+        c('AVAILABLE COMMANDS:', 'orange'), '',
+        '  ' + c('help',     'white') + '            — show this list',
+        '  ' + c('whoami',   'white') + '          — identity card',
+        '  ' + c('skills',   'white') + '          — tech stack',
+        '  ' + c('projects', 'white') + '        — project index',
+        '  ' + c('contact',  'white') + '         — contact info',
+        '  ' + c('neofetch', 'white') + '        — system info + ASCII',
+        '  ' + c('certifications','white') + '  — certs & progress',
+        '  ' + c('resume',   'white') + '          — download resume',
+        '  ' + c('motd',     'white') + '            — message of the day',
+        '  ' + c('figlet',   'white') + ' &lt;text&gt;   — ASCII block text',
+        '  ' + c('goto',     'white') + ' &lt;section&gt; — navigate',
+        '  ' + c('ls',       'white') + '              — list site',
+        '  ' + c('cat',      'white') + ' &lt;file&gt;     — read file',
+        '  ' + c('ping',     'white') + '            — ping server',
+        '  ' + c('uptime',   'white') + '          — page uptime',
+        '  ' + c('date',     'white') + '            — current time',
+        '  ' + c('echo',     'white') + ' &lt;msg&gt;     — echo text',
+        '',
+        c('FUN:', 'green'),
+        '  ' + c('coffee',   'white') + '          — ☕',
+        '  ' + c('matrix',   'white') + '          — 🟩',
+        '  ' + c('snake',    'white') + '           — 🐍 play snake!',
+        '  ' + c('repo',     'white') + '            — open GitHub',
+        '  ' + c('linkedin', 'white') + '        — open LinkedIn',
+        '  ' + c('clear',    'white') + '           — clear screen',
+        '', c('TIP:', 'dim') + ' ↑/↓ for history, Tab for autocomplete (coming soon)',
+      ];
+    },
+
+    whoami: function() {
+      return [
+        c('NAME:', 'dim') + '     Sai Srujan Punati',
+        c('ROLE:', 'dim') + '     Cloud Engineer & DevOps Practitioner',
+        c('BASE:', 'dim') + '     Hyderabad, India',
+        c('STACK:', 'dim') + '    AWS / Docker / Terraform / Linux',
+        c('STATUS:', 'dim') + '   ' + c('● AVAILABLE FOR WORK', 'green'),
+      ];
+    },
+
+    skills: function() {
+      return [
+        c('// TECH_STACK', 'orange'), '',
+        c('CLOUD & INFRA', 'white') + '   → AWS, Azure, GCP, Terraform, CloudFormation',
+        c('CONTAINERS', 'white') + '      → Docker, Kubernetes, Docker Compose',
+        c('CI/CD', 'white') + '           → GitHub Actions, Jenkins, GitLab CI',
+        c('MONITORING', 'white') + '      → Prometheus, Grafana, CloudWatch',
+        c('OS & TOOLS', 'white') + '      → Linux, Bash, Git, Nginx, Ansible',
+        c('LANGUAGES', 'white') + '       → Python, JavaScript, TypeScript, SQL',
+      ];
+    },
+
+    projects: function() {
+      return [
+        c('// PROJECT_INDEX', 'orange'), '',
+        '  [01] ' + c('Portfolio v2.0', 'white') + '     — This site. Neo-brutalist.',
+        '  [02] ' + c('GrindMap', 'white') + '           — CP tracker dashboard',
+        '  [03] ' + c('Cloud Infra Labs', 'white') + '   — AWS experiments',
+        '  [04] ' + c('CI/CD Templates', 'white') + '    — Reusable pipelines',
+        '', c('Run', 'dim') + ' ' + c('goto projects', 'white') + ' ' + c('to scroll there', 'dim'),
+      ];
+    },
+
+    contact: function() {
+      return [
+        c('// CONTACT_INFO', 'orange'), '',
+        c('EMAIL:', 'dim') + '      saisrujanpunati@gmail.com',
+        c('GITHUB:', 'dim') + '     github.com/saiusesgithub',
+        c('LINKEDIN:', 'dim') + '   linkedin.com/in/saisrujanpunati',
+        c('LOCATION:', 'dim') + '   Hyderabad, India (17.38°N, 78.49°E)',
+      ];
+    },
+
+    certifications: function() {
+      return [
+        c('// CERTIFICATIONS & PROGRESS', 'orange'), '',
+        '  ' + c('[✓]', 'green') + ' AWS Cloud Practitioner',
+        '  ' + c('[✓]', 'green') + ' Docker Fundamentals',
+        '  ' + c('[✓]', 'green') + ' Linux System Administration',
+        '  ' + c('[~]', 'yellow') + ' Terraform Associate ' + c('(IN PROGRESS)', 'yellow'),
+        '  ' + c('[~]', 'yellow') + ' GitHub Actions CI/CD ' + c('(IN PROGRESS)', 'yellow'),
+        '  ' + c('[·]', 'dim') + ' CKA — Certified Kubernetes Admin ' + c('(PLANNED)', 'dim'),
+        '  ' + c('[·]', 'dim') + ' AWS Solutions Architect ' + c('(PLANNED)', 'dim'),
+        '',
+        c('PROGRESS:', 'dim') + ' ' + c('███████░░░', 'green') + ' 3/7 completed',
+      ];
+    },
+
+    neofetch: function() {
+      var lines = [];
+      ASCII_LOGO.forEach(function(l) { lines.push(c(l, 'orange')); });
+      lines.push('');
+      lines.push(c('saisrujan', 'orange') + '@' + c('portfolio', 'white'));
+      lines.push('─'.repeat(28));
+      lines.push(c('OS:', 'orange') + '      Web / Astro v4');
+      lines.push(c('HOST:', 'orange') + '    Vercel Edge');
+      lines.push(c('KERNEL:', 'orange') + '  GSAP 3.x');
+      lines.push(c('SHELL:', 'orange') + '   brutalist-term v1.0');
+      lines.push(c('THEME:', 'orange') + '   Neo-Brutalist [dark]');
+      lines.push(c('CPU:', 'orange') + '     Coffee-Powered');
+      lines.push(c('UPTIME:', 'orange') + '  ' + getUptime());
+      lines.push('');
+      var sw = '';
+      ['#000','#333','#666','#999','#ccc','#fff','#ff4500','#22c55e'].forEach(function(col) {
+        sw += '<span style="background:'+col+';display:inline-block;width:24px;height:10px;border:1px solid #333;"></span>';
+      });
+      lines.push(sw);
+      return lines;
+    },
+
+    motd: function() {
+      var q = MOTD_QUOTES[Math.floor(Math.random() * MOTD_QUOTES.length)];
+      return [c('// MESSAGE OF THE DAY', 'orange'), '', c(q, 'white') ];
+    },
+
+    figlet: function(args) {
+      var text = (args || 'HI').toUpperCase().slice(0, 12);
+      var rows = ['','','','',''];
+      for (var i = 0; i < text.length; i++) {
+        var ch = FIGLET_FONT[text[i]] || FIGLET_FONT[' '];
+        for (var r = 0; r < 5; r++) {
+          rows[r] += ch[r] + ' ';
+        }
+      }
+      return rows.map(function(r) { return c(r, 'orange'); });
+    },
+
+    resume: function() {
+      window.open('/resume.pdf', '_blank');
+      return [c('↗ Opening resume.pdf...', 'green')];
+    },
+
+    goto: function(args) {
+      var target = (args || '').toLowerCase().trim();
+      var map = {hero:'about',about:'about',skills:'skills',projects:'projects',experience:'experience',contact:'contact',footer:'contact',terminal:'terminal'};
+      var id = map[target];
+      if (!id) return [c('ERROR:', 'orange') + ' Unknown section. Options: hero, skills, projects, experience, contact, terminal'];
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      return [c('↗ Navigating to ' + target.toUpperCase() + '...', 'green')];
+    },
+
+    uptime: function()  { return [c('UPTIME:', 'dim') + ' ' + getUptime()]; },
+    date: function()    { return [c('DATE:', 'dim') + ' ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST']; },
+    echo: function(a)   { return [a || '']; },
+    pwd: function()     { return ['/home/saisrujan/portfolio']; },
+    history: function() {
+      if (!cmdHistory.length) return [c('No history yet.', 'dim')];
+      return cmdHistory.slice(0,20).map(function(cmd, i) { return c(String(i+1).padStart(3,' '), 'dim') + '  ' + cmd; });
+    },
+
+    coffee: function() {
+      var lines = [];
+      ASCII_COFFEE.forEach(function(l) { lines.push(c(l, 'orange')); });
+      lines.push('');
+      lines.push(c('Brewing...', 'dim') + ' your coffee is ready ☕');
+      return lines;
+    },
+
+    repo: function() {
+      window.open('https://github.com/saiusesgithub', '_blank');
+      return [c('↗ Opening GitHub...', 'green')];
+    },
+    linkedin: function() {
+      window.open('https://linkedin.com/in/saisrujanpunati', '_blank');
+      return [c('↗ Opening LinkedIn...', 'green')];
+    },
+    clear: function() { body.innerHTML = ''; return []; },
+
+    sudo: function(args) {
+      if (args && args.trim().startsWith('rm')) {
+        return [c('☠️  PERMISSION DENIED', 'orange'), '', c('nice try.', 'dim'), c('this portfolio is too good to delete.', 'dim')];
+      }
+      return [c('ERROR:', 'orange') + ' sudo: you lack root privileges 😏'];
+    },
+
+    matrix: function() {
+      var chars = '01アイウエオカキクケコサシスセソ';
+      var lines = [];
+      for (var i = 0; i < 8; i++) {
+        var row = '';
+        for (var j = 0; j < 56; j++) row += chars[Math.floor(Math.random() * chars.length)];
+        lines.push(c(row, 'green'));
+      }
+      lines.push(''); lines.push(c('Wake up, Neo...', 'green'));
+      return lines;
+    },
+
+    ls: function() {
+      return [c('.','dim'),'├── '+c('about/','orange'),'├── '+c('skills/','orange'),'├── '+c('projects/','orange'),
+        '├── '+c('experience/','orange'),'├── '+c('terminal/','orange'),'├── '+c('contact/','orange'),
+        '├── resume.pdf','└── README.md'];
+    },
+
+    cat: function(args) {
+      var file = (args || '').trim().toLowerCase();
+      if (file === 'readme.md' || file === 'readme') {
+        return [c('# SAI SRUJAN — Portfolio','orange'),'','Cloud engineer. DevOps practitioner.',
+          'Building infrastructure at scale.','',c('Built with:','dim')+' Astro + GSAP + TailwindCSS',
+          c('Deployed on:','dim')+' Vercel Edge',c('Design:','dim')+' Neo-Brutalist'];
+      }
+      if (file === 'resume.pdf') { window.open('/resume.pdf','_blank'); return [c('↗ Opening resume.pdf...','green')]; }
+      return [c('cat: '+(file||'?')+': No such file','orange')];
+    },
+
+    ping: function() {
+      return ['PING saisrujan.dev (76.76.21.21): 56 bytes',
+        '64 bytes: time='+c((Math.random()*5+1).toFixed(1)+'ms','green'),
+        '64 bytes: time='+c((Math.random()*5+1).toFixed(1)+'ms','green'),
+        '64 bytes: time='+c((Math.random()*5+1).toFixed(1)+'ms','green'),
+        '',c('--- saisrujan.dev ping statistics ---','dim'),
+        '3 packets transmitted, 3 received, '+c('0% loss','green')];
+    },
+
+    // ── SNAKE GAME ────────────────
+    snake: function() {
+      startSnake();
+      return [];
+    },
+  };
+
+  // ── Snake Game ──────────────────
+  function startSnake() {
+    snakeActive = true;
+    var W = 30, H = 14;
+    var snake = [{x:5,y:7},{x:4,y:7},{x:3,y:7}];
+    var dir = {x:1,y:0};
+    var food = spawnFood();
+    var score = 0;
+    var gameOver = false;
+
+    function spawnFood() {
+      var f;
+      do { f = {x:Math.floor(Math.random()*W), y:Math.floor(Math.random()*H)}; }
+      while (snake.some(function(s){return s.x===f.x&&s.y===f.y;}));
+      return f;
+    }
+
+    function render() {
+      // Build grid
+      var grid = [];
+      for (var y = 0; y < H; y++) {
+        var row = '';
+        for (var x = 0; x < W; x++) {
+          if (snake[0].x === x && snake[0].y === y) row += c('██', 'orange');
+          else if (snake.some(function(s){return s.x===x&&s.y===y;})) row += c('██', 'green');
+          else if (food.x === x && food.y === y) row += c('██', 'red');
+          else row += '<span style="color:#111">··</span>';
+        }
+        grid.push(row);
+      }
+
+      // Clear body and draw
+      body.innerHTML = '';
+      printLines([
+        c('🐍 SNAKE — Score: ' + score + '   |   WASD or Arrow Keys   |   Q to quit', 'orange'),
+        c('┌' + '──'.repeat(W) + '┐', 'dim'),
+      ]);
+      grid.forEach(function(row) {
+        printLines([c('│', 'dim') + row + c('│', 'dim')]);
+      });
+      printLines([
+        c('└' + '──'.repeat(W) + '┘', 'dim'),
+      ]);
+      if (gameOver) {
+        printLines(['', c('GAME OVER! Score: ' + score + '. Type anything to exit.', 'orange')]);
+      }
+    }
+
+    function tick() {
+      if (gameOver) return;
+      var head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+
+      // Wall collision (wrap around)
+      if (head.x < 0) head.x = W - 1;
+      if (head.x >= W) head.x = 0;
+      if (head.y < 0) head.y = H - 1;
+      if (head.y >= H) head.y = 0;
+
+      // Self collision
+      if (snake.some(function(s){return s.x===head.x&&s.y===head.y;})) {
+        gameOver = true;
+        render();
+        return;
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        food = spawnFood();
+      } else {
+        snake.pop();
+      }
+
+      render();
+    }
+
+    // Snake key handler
+    var snakeKeyHandler = function(e) {
+      if (!snakeActive) return;
+      var key = e.key.toLowerCase();
+      if (gameOver) {
+        stopSnake();
+        return;
+      }
+      if (key === 'w' || key === 'arrowup')    { if (dir.y !== 1)  dir = {x:0,y:-1}; }
+      if (key === 's' || key === 'arrowdown')   { if (dir.y !== -1) dir = {x:0,y:1}; }
+      if (key === 'a' || key === 'arrowleft')   { if (dir.x !== 1)  dir = {x:-1,y:0}; }
+      if (key === 'd' || key === 'arrowright')   { if (dir.x !== -1) dir = {x:1,y:0}; }
+      if (key === 'q') { stopSnake(); }
+      e.preventDefault();
+    };
+
+    function stopSnake() {
+      snakeActive = false;
+      clearInterval(snakeInterval);
+      document.removeEventListener('keydown', snakeKeyHandler);
+      body.innerHTML = '';
+      printLines([c('Snake ended. Score: ' + score, 'orange'), '']);
+      input.disabled = false;
+      input.focus();
+    }
+
+    input.disabled = true;
+    document.addEventListener('keydown', snakeKeyHandler);
+    render();
+    snakeInterval = setInterval(tick, 150);
+  }
+
+  // ── Print helpers ───────────────
+  function printLines(lines) {
+    lines.forEach(function(line) {
+      var div = document.createElement('div');
+      div.innerHTML = line;
+      div.style.cssText = 'color:#aaa; white-space:pre-wrap; word-break:break-word;';
+      body.appendChild(div);
+    });
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function printWelcome() {
+    printLines([
+      c('╔══════════════════════════════════════════════╗', 'orange'),
+      c('║', 'orange') + '  SAISRUJAN PORTFOLIO TERMINAL v1.0         ' + c('║', 'orange'),
+      c('║', 'orange') + '  Type ' + c('help', 'white') + ' to see available commands       ' + c('║', 'orange'),
+      c('║', 'orange') + '  Try ' + c('neofetch', 'white') + ', ' + c('coffee', 'white') + ', ' + c('snake', 'white') + ', or ' + c('matrix', 'white') + '     ' + c('║', 'orange'),
+      c('╚══════════════════════════════════════════════╝', 'orange'),
+      '',
+    ]);
+  }
+
+  function processCommand(cmd) {
+    if (snakeActive) return;
+    var trimmed = cmd.trim();
+    if (!trimmed) return;
+
+    var echo = document.createElement('div');
+    echo.innerHTML = c('▸ ', 'orange') + '<span style="color:#fff">' + trimmed + '</span>';
+    echo.style.cssText = 'white-space:pre-wrap;';
+    body.appendChild(echo);
+
+    var parts = trimmed.split(/\s+/);
+    var name = parts[0].toLowerCase();
+    var args = parts.slice(1).join(' ');
+
+    var handler = commands[name];
+    if (handler) {
+      var result = handler(args);
+      if (result && result.length) printLines(result);
+    } else {
+      printLines([c('command not found: ', 'orange') + name + '. Type ' + c('help', 'white') + ' for available commands.']);
+    }
+
+    var spacer = document.createElement('div');
+    spacer.style.height = '6px';
+    body.appendChild(spacer);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  // ── Boot Sequence (triggered by button) ──
+  var bootLines = [
+    { text: '[0.00] TERMINAL: initializing...', color: 'dim' },
+    { text: '[0.12] SHELL: brutalist-term v1.0 loaded', color: 'dim' },
+    { text: '[0.24] FONT: monospace engaged', color: 'dim' },
+    { text: '[0.38] MODULES: figlet, snake, neofetch — loaded', color: 'dim' },
+    { text: '[0.45] AUTH: saisrujan — verified ✓', color: 'green' },
+    { text: '[0.50] STATUS: all systems nominal.', color: 'orange' },
+  ];
+
+  function runBootSequence() {
+    if (booted) return;
+    booted = true;
+
+    // Hide boot screen, show terminal body
+    bootScreen.style.display = 'none';
+    body.style.display = 'flex';
+    inputBar.style.display = 'flex';
+
+    var i = 0;
+    function nextLine() {
+      if (i < bootLines.length) {
+        var line = bootLines[i];
+        printLines([c(line.text, line.color)]);
+        i++;
+        setTimeout(nextLine, 150);
+      } else {
+        printLines(['']);
+        printWelcome();
+        processCommand('neofetch');
+        // Focus input after boot
+        setTimeout(function() { input.focus(); updateCursorPos(); }, 100);
+      }
+    }
+
+    nextLine();
+  }
+
+  // Boot button click
+  bootBtn.addEventListener('click', runBootSequence);
+
+  // ── Input handling ──────────────
+  input.addEventListener('keydown', function(e) {
+    if (snakeActive) return;
+    if (e.key === 'Enter') {
+      var val = input.value;
+      if (val.trim()) {
+        cmdHistory.unshift(val);
+        if (cmdHistory.length > 50) cmdHistory.pop();
+      }
+      histIdx = -1;
+      processCommand(val);
+      input.value = '';
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (histIdx < cmdHistory.length - 1) { histIdx++; input.value = cmdHistory[histIdx]; }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (histIdx > 0) { histIdx--; input.value = cmdHistory[histIdx]; }
+      else { histIdx = -1; input.value = ''; }
+    }
+  });
+
+  // Console ASCII art
+  console.log('%c' + ASCII_LOGO.join('\n'), 'color: #ff4500; font-family: monospace; font-size: 10px;');
+  console.log('%cScroll down to the terminal section and type "help"!', 'color: #22c55e; font-family: monospace;');
+
+})();
+</script>

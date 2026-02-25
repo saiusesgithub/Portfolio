@@ -1,0 +1,71 @@
+---
+// Vertical dot navigation sidebar — right edge
+const sections = [
+  { id: 'about', label: 'HERO' },
+  { id: 'skills', label: 'SKILLS' },
+  { id: 'projects', label: 'PROJECTS' },
+  { id: 'experience', label: 'EXPERIENCE' },
+  { id: 'contact', label: 'CONTACT' },
+];
+---
+
+<nav id="section-nav" class="fixed right-4 top-1/2 -translate-y-1/2 z-[100] hidden lg:flex flex-col items-end gap-4" aria-label="Section navigation">
+  {sections.map((s) => (
+    <a
+      href={`#${s.id}`}
+      class="section-dot group flex items-center gap-3"
+      data-section={s.id}
+    >
+      <!-- Label (visible on hover) -->
+      <span class="font-tech text-[9px] uppercase tracking-widest text-[#555] opacity-0 group-hover:opacity-100 transition-opacity duration-100 pointer-events-none select-none translate-x-1 group-hover:translate-x-0 transition-transform">
+        {s.label}
+      </span>
+      <!-- Dot -->
+      <span class="dot-indicator w-[10px] h-[10px] border-2 border-[#444] bg-transparent transition-all duration-100 block shrink-0"></span>
+    </a>
+  ))}
+</nav>
+
+<style is:global>
+  .section-dot .dot-indicator {
+    /* default: hollow dark square */
+  }
+  .section-dot.active .dot-indicator {
+    background-color: #ff4500;
+    border-color: #ff4500;
+    box-shadow: 0 0 6px rgba(255, 69, 0, 0.5);
+  }
+  .section-dot:hover .dot-indicator {
+    border-color: #ff4500;
+  }
+</style>
+
+<script is:inline>
+(function() {
+  var dots = document.querySelectorAll('.section-dot[data-section]');
+  var allSections = Array.from(document.querySelectorAll('section[id]'));
+  if (!dots.length || !allSections.length) return;
+
+  var lastId = '';
+
+  function update() {
+    var triggerY = window.innerHeight * 0.4;
+    var active = null;
+    for (var i = 0; i < allSections.length; i++) {
+      if (allSections[i].getBoundingClientRect().top <= triggerY) {
+        active = allSections[i];
+      }
+    }
+    if (!active) active = allSections[0];
+    var id = active ? active.id : '';
+    if (id === lastId) return;
+    lastId = id;
+    dots.forEach(function(d) {
+      d.classList.toggle('active', d.getAttribute('data-section') === id);
+    });
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>

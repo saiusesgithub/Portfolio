@@ -1,0 +1,83 @@
+---
+// Fixed "Currently Building / Learning" badge — bottom-left
+---
+
+<div id="status-badge" class="fixed bottom-6 left-6 z-[100] hidden lg:block">
+  <div class="border-2 border-[#333] bg-black text-white font-mono text-[10px] shadow-[3px_3px_0_0_#ff4500] select-none">
+
+    <!-- Header strip -->
+    <div class="flex items-center gap-2 px-3 py-1.5 border-b border-[#222] bg-[#0a0a0a]">
+      <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+      <span class="uppercase tracking-widest text-[9px] text-[#555]">SYS_STATUS</span>
+    </div>
+
+    <!-- Content -->
+    <div class="px-3 py-2 flex flex-col gap-1.5">
+      <!-- Learning -->
+      <div class="flex items-center gap-2">
+        <span class="text-safety-orange">▸</span>
+        <span class="text-[#666]">LEARNING:</span>
+        <span id="learning-text" class="text-white font-bold"></span>
+      </div>
+      <!-- Building -->
+      <div class="flex items-center gap-2">
+        <span class="text-green-400">▸</span>
+        <span class="text-[#666]">BUILDING:</span>
+        <span id="building-text" class="text-white font-bold"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+(function() {
+  var learningItems = [
+    'TERRAFORM',
+    'GITHUB ACTIONS',
+    'KUBERNETES',
+    'ANSIBLE',
+    'PROMETHEUS',
+  ];
+  var buildingItems = [
+    'PORTFOLIO V2.0',
+    'GRINDMAP',
+    'CLOUD INFRA LABS',
+    'CI/CD TEMPLATES',
+  ];
+
+  var learnEl = document.getElementById('learning-text');
+  var buildEl = document.getElementById('building-text');
+  if (!learnEl || !buildEl) return;
+
+  var lIdx = 0;
+  var bIdx = 0;
+
+  function typeText(el, text, cb) {
+    el.textContent = '';
+    var i = 0;
+    var timer = setInterval(function() {
+      el.textContent = text.slice(0, i + 1);
+      i++;
+      if (i >= text.length) {
+        clearInterval(timer);
+        if (cb) cb();
+      }
+    }, 40);
+  }
+
+  function cycle() {
+    typeText(learnEl, learningItems[lIdx], function() {
+      setTimeout(function() {
+        typeText(buildEl, buildingItems[bIdx], function() {
+          lIdx = (lIdx + 1) % learningItems.length;
+          bIdx = (bIdx + 1) % buildingItems.length;
+          setTimeout(cycle, 3000);
+        });
+      }, 200);
+    });
+  }
+
+  cycle();
+})();
+</script>

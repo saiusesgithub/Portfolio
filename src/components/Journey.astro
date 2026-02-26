@@ -1,0 +1,177 @@
+---
+import { journey } from '../data/portfolio';
+
+// calculate progress percentage
+const stableCount = journey.filter(j => j.status === 'STABLE').length;
+const totalCount = journey.length;
+const progressPct = Math.round((stableCount / totalCount) * 100);
+---
+
+<section id="journey" class="w-full bg-white relative overflow-hidden">
+
+  <!-- Caution tape top -->
+  <div class="w-full h-4 bg-[repeating-linear-gradient(45deg,#fff,#fff_10px,#ff4500_10px,#ff4500_20px)] border-b-4 border-black"></div>
+
+  <!-- Section Header -->
+  <div class="px-6 lg:px-12 pt-10 pb-8">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Terminal command -->
+      <div class="font-mono text-[11px] text-[#999] mb-4">
+        <span class="text-safety-orange">▸</span>
+        <span> $ cat CHANGELOG.md</span>
+      </div>
+
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 border-b-4 border-black pb-8">
+        <div>
+          <div class="font-tech text-[10px] text-[#999] uppercase tracking-[0.3em] mb-3">// SOFTWARE_CHANGELOG</div>
+          <h2 class="text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.85] text-black" style="text-shadow: -3px 3px 0 #ff4500;">
+            THE<br />JOURNEY<span class="text-safety-orange">_</span>
+          </h2>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="flex flex-col gap-2 lg:items-end">
+          <div class="font-tech text-[10px] uppercase tracking-widest text-[#999]">
+            BUILD_PROGRESS: <span class="text-black font-bold">{progressPct}%</span>
+          </div>
+          <div class="w-64 h-3 border-2 border-black bg-white relative overflow-hidden">
+            <div class="h-full bg-black transition-all duration-500" style={`width: ${progressPct}%`}></div>
+            <div class="absolute right-0 top-0 h-full bg-[repeating-linear-gradient(45deg,transparent,transparent_2px,rgba(255,69,0,0.3)_2px,rgba(255,69,0,0.3)_4px)]" style={`width: ${100 - progressPct}%; left: ${progressPct}%`}></div>
+          </div>
+          <div class="font-tech text-[9px] text-[#bbb] uppercase tracking-widest">
+            v{journey[journey.length - 2].version} → v{journey[journey.length - 1].version}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Version Entries -->
+  <div class="px-6 lg:px-12 pb-12">
+    <div class="max-w-5xl mx-auto relative">
+
+      <!-- Vertical version line (left side) -->
+      <div class="absolute left-[15px] lg:left-[19px] top-0 bottom-0 w-[3px] bg-black" aria-hidden="true"></div>
+
+      {journey.map((entry, idx) => {
+        const isActive = entry.status === 'IN_DEV';
+        const isPlanned = entry.status === 'PLANNED';
+        const isStable = entry.status === 'STABLE';
+        const isMajor = entry.version.endsWith('.0.0') || entry.version === '1.0.0';
+
+        return (
+          <div class={`relative pl-12 lg:pl-16 mb-8 last:mb-0 group ${isPlanned ? 'opacity-60' : ''}`}>
+
+            {/* Version node on the line */}
+            <div class={`absolute left-[8px] lg:left-[12px] top-[12px] w-[18px] h-[18px] border-3 z-10 ${
+              isActive
+                ? 'bg-safety-orange border-black shadow-[0_0_12px_rgba(255,69,0,0.4)] animate-pulse'
+                : isPlanned
+                  ? 'bg-white border-dashed border-[#ccc]'
+                  : isMajor
+                    ? 'bg-black border-black'
+                    : 'bg-white border-black'
+            }`} style="border-width: 3px;"></div>
+
+            {/* Horizontal connector */}
+            <div class={`absolute left-[26px] lg:left-[30px] top-[20px] w-[12px] lg:w-[18px] h-[3px] ${isPlanned ? 'bg-[#ddd]' : 'bg-black'}`}></div>
+
+            {/* The Entry Card */}
+            <div class={`border-3 relative ${
+              isActive
+                ? 'border-safety-orange bg-white shadow-[6px_6px_0_0_#ff4500]'
+                : isPlanned
+                  ? 'border-dashed border-[#ccc] bg-gray-50 shadow-none'
+                  : 'border-black bg-white shadow-[5px_5px_0_0_#000] hover:shadow-[7px_7px_0_0_#ff4500] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all duration-100'
+            }`} style="border-width: 3px;">
+
+              {/* Version Header */}
+              <div class={`px-4 lg:px-6 py-2.5 border-b-2 ${
+                isActive ? 'border-safety-orange bg-[#fff8f5]' : isPlanned ? 'border-[#ddd] bg-gray-50' : 'border-black bg-gray-50'
+              } flex flex-wrap items-center justify-between gap-2`}>
+                <div class="flex items-center gap-3 flex-wrap">
+                  <span class={`font-mono text-[13px] lg:text-[15px] font-black ${isActive ? 'text-safety-orange' : isPlanned ? 'text-[#ccc]' : 'text-black'}`}>
+                    v{entry.version}
+                  </span>
+                  <span class={`font-tech text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 border-2 ${
+                    isActive
+                      ? 'border-safety-orange text-safety-orange bg-white'
+                      : isPlanned
+                        ? 'border-dashed border-[#ccc] text-[#bbb]'
+                        : 'border-black text-black bg-white'
+                  }`}>
+                    {entry.codename}
+                  </span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class={`font-mono text-[10px] ${isPlanned ? 'text-[#ccc]' : 'text-[#999]'}`}>
+                    {entry.date}
+                  </span>
+                  {isActive && (
+                    <span class="flex items-center gap-1 font-tech text-[9px] text-safety-orange uppercase tracking-widest">
+                      <span class="w-1.5 h-1.5 bg-safety-orange rounded-full animate-pulse"></span>
+                      BUILDING
+                    </span>
+                  )}
+                  {isPlanned && (
+                    <span class="font-tech text-[9px] text-[#ccc] uppercase tracking-widest">PLANNED</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Signal / Story */}
+              <div class="px-4 lg:px-6 py-4">
+                <div class={`font-mono text-[9px] uppercase tracking-[0.3em] mb-2 ${isPlanned ? 'text-[#ccc]' : 'text-[#bbb]'}`}>// TRANSMISSION</div>
+                <p class={`text-[13px] lg:text-[14px] leading-relaxed ${isPlanned ? 'text-[#bbb] italic' : 'text-[#444]'} max-w-3xl`}>
+                  {entry.signal}
+                </p>
+
+                {/* Tech acquired */}
+                <div class="mt-4 flex flex-wrap items-center gap-2">
+                  <span class={`font-mono text-[9px] uppercase tracking-widest ${isPlanned ? 'text-[#ddd]' : 'text-[#bbb]'} mr-1`}>TECH_ACQUIRED:</span>
+                  {entry.tech.map((t) => (
+                    <span class={`font-mono text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 ${
+                      isActive
+                        ? 'border-2 border-safety-orange text-safety-orange bg-white hover:bg-safety-orange hover:text-white transition-colors duration-0'
+                        : isPlanned
+                          ? 'border border-dashed border-[#ddd] text-[#ccc]'
+                          : 'border-2 border-black text-black bg-white hover:bg-black hover:text-white transition-colors duration-0'
+                    }`}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Line terminator */}
+      <div class="absolute left-[8px] lg:left-[12px] bottom-[-12px] w-[18px] h-[18px] border-3 border-black bg-white z-10 flex items-center justify-center" style="border-width: 3px;">
+        <span class="text-[#999] text-[8px] font-mono">∞</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t-4 border-black px-6 lg:px-12 py-4">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div class="font-mono text-[11px]">
+        <span class="text-[#999]">LATEST_STABLE:</span>
+        <span class="text-black font-bold ml-2">v{journey.filter(j => j.status === 'STABLE').pop()?.version}</span>
+        <span class="text-[#ccc] mx-2">|</span>
+        <span class="text-[#999]">NEXT_RELEASE:</span>
+        <span class="text-safety-orange font-bold ml-2">v{journey[journey.length - 1].version}</span>
+      </div>
+      <div class="font-mono text-[10px] text-[#bbb] uppercase tracking-widest">
+        // the changelog grows. the build never stops.
+      </div>
+    </div>
+  </div>
+
+</section>

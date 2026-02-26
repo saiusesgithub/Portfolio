@@ -2,30 +2,164 @@
 import { experience } from '../data/portfolio';
 ---
 
-<section class="w-full border-beam-b">
-  <div class="p-6 border-beam-b bg-white">
-    <h2 class="text-2xl font-extrabold uppercase tracking-tight">Work Experience</h2>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-    {experience.map((exp, index) => (
-      <div class={`cursor-target relative h-auto min-h-[300px] p-8 group bg-concrete hover:bg-white transition-colors duration-0 ${index < experience.length - 1 ? 'border-beam-b lg:border-b-0 lg:border-beam-r' : ''}`}>
-        <div class="font-tech text-xs text-safety-orange mb-2 uppercase tracking-widest">
-          {exp.period}
-        </div>
-        <h3 class="text-2xl font-bold uppercase mb-2">
-          {exp.title}
-        </h3>
-        <div class="font-tech text-xs uppercase mb-4 opacity-70">
-          {exp.company} // {exp.location}
-        </div>
-        <p class="text-sm leading-relaxed opacity-80">
-          {exp.description}
-        </p>
-        
-        <!-- Corner decorations on hover -->
-        <div class="absolute top-4 left-4 w-3 h-3 border-l-2 border-t-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <div class="absolute bottom-4 right-4 w-3 h-3 border-r-2 border-b-2 border-safety-orange opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<section class="w-full bg-black border-t-4 border-black relative overflow-hidden">
+
+  <!-- Caution tape top -->
+  <div class="w-full h-4 bg-[repeating-linear-gradient(45deg,#000,#000_10px,#ff4500_10px,#ff4500_20px)] border-b-2 border-[#222]"></div>
+
+  <!-- Section Header — styled as terminal command -->
+  <div class="px-6 lg:px-12 pt-8 pb-6">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Command line -->
+      <div class="font-mono text-[11px] text-[#444] mb-3">
+        <span class="text-safety-orange" style="text-shadow: 0 0 6px rgba(255,69,0,0.3);">▸</span>
+        <span class="text-[#666]"> $ git log --deployments --format=dossier</span>
       </div>
-    ))}
+
+      <!-- Title block -->
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 border-b-2 border-[#222] pb-6">
+        <div>
+          <div class="font-tech text-[10px] text-[#555] uppercase tracking-[0.3em] mb-2">// DEPLOYMENT_HISTORY</div>
+          <h2 class="text-4xl lg:text-5xl font-black uppercase tracking-tight text-white leading-none" style="text-shadow: -3px 3px 0 #ff4500;">
+            MISSION<br />LOG<span class="text-safety-orange">_</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-4 font-tech text-[10px] uppercase tracking-widest">
+          <span class="text-[#555]">TOTAL_DEPLOYMENTS:</span>
+          <span class="text-safety-orange font-bold text-[14px]">{experience.length}</span>
+          <span class="text-[#333]">|</span>
+          <span class="text-[#555]">CAREER_STATUS:</span>
+          <span class="text-green-400 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block"></span>
+            DEPLOYING
+          </span>
+        </div>
+      </div>
+
+    </div>
   </div>
+
+  <!-- Deployment Cards -->
+  <div class="px-6 lg:px-12 pb-12">
+    <div class="max-w-5xl mx-auto relative">
+
+      <!-- Vertical git pipe (left side) -->
+      <div class="absolute left-[19px] lg:left-[23px] top-0 bottom-0 w-[2px] bg-[#222]" aria-hidden="true"></div>
+
+      <!-- Cards -->
+      {experience.map((exp, idx) => (
+        <div class="relative pl-12 lg:pl-16 mb-10 last:mb-0 group">
+
+          <!-- Git node dot -->
+          <div class={`absolute left-[12px] lg:left-[16px] top-[20px] w-[16px] h-[16px] border-2 z-10 ${
+            exp.status === 'ACTIVE'
+              ? 'bg-green-400 border-green-400 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
+              : 'bg-[#333] border-[#555]'
+          }`}></div>
+
+          <!-- Horizontal connector line from dot to card -->
+          <div class="absolute left-[28px] lg:left-[32px] top-[27px] w-[16px] lg:w-[24px] h-[2px] bg-[#333]"></div>
+
+          <!-- The Dossier Card -->
+          <div class={`border-2 ${exp.status === 'ACTIVE' ? 'border-safety-orange shadow-[6px_6px_0_0_#ff4500]' : 'border-[#333] shadow-[6px_6px_0_0_#222]'} bg-[#0a0a0a] hover:shadow-[8px_8px_0_0_#ff4500] hover:border-safety-orange transition-all duration-100 relative`}>
+
+            <!-- Commit header bar -->
+            <div class={`px-4 lg:px-6 py-2.5 border-b-2 ${exp.status === 'ACTIVE' ? 'border-safety-orange bg-[#111]' : 'border-[#222] bg-[#0d0d0d]'} flex flex-wrap items-center justify-between gap-2`}>
+              <div class="font-mono text-[11px] flex items-center gap-2 flex-wrap">
+                <span class="text-safety-orange" style="text-shadow: 0 0 6px rgba(255,69,0,0.3);">commit</span>
+                <span class="text-[#666]">{exp.hash}</span>
+                <span class="text-[#333]">—</span>
+                <span class="text-white font-bold">DEPLOYMENT_{exp.deploymentId}</span>
+              </div>
+              <div class={`flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 border ${
+                exp.status === 'ACTIVE'
+                  ? 'border-green-400 text-green-400'
+                  : 'border-[#444] text-[#555]'
+              }`}>
+                <span class={`w-1.5 h-1.5 rounded-full ${exp.status === 'ACTIVE' ? 'bg-green-400 animate-pulse' : 'bg-[#555]'}`}></span>
+                {exp.status}
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4 lg:p-6">
+
+              <!-- Role + Meta row -->
+              <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2 mb-5">
+                <div>
+                  <h3 class="text-xl lg:text-2xl font-black uppercase tracking-tight text-white mb-1 group-hover:text-safety-orange transition-colors duration-100">
+                    {exp.title}
+                  </h3>
+                  <div class="font-mono text-[11px] text-[#666] flex flex-wrap items-center gap-2">
+                    <span class="text-[#555]">Author:</span>
+                    <span class="text-white">{exp.company}</span>
+                    <span class="text-[#333]">|</span>
+                    <span class="text-[#555]">Loc:</span>
+                    <span class="text-[#888]">{exp.location}</span>
+                  </div>
+                </div>
+                <div class="font-mono text-[11px] text-[#888] border border-[#333] px-3 py-1.5 bg-[#111] shrink-0 flex items-center gap-2">
+                  <span class="text-[#555]">Date:</span>
+                  <span class="text-safety-orange">{exp.period}</span>
+                </div>
+              </div>
+
+              <!-- Mission brief / responsibilities as git tree -->
+              <div class="mb-5">
+                <div class="font-mono text-[9px] text-[#555] uppercase tracking-[0.3em] mb-2">// MISSION_BRIEF</div>
+                <div class="font-mono text-[12px] text-[#aaa] flex flex-col gap-1 leading-relaxed">
+                  {exp.description.map((line, i) => (
+                    <div class="flex items-start gap-2">
+                      <span class="text-[#333] shrink-0 select-none">
+                        {i < exp.description.length - 1 ? '├──' : '└──'}
+                      </span>
+                      <span>{line}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Tech stack pills -->
+              <div>
+                <div class="font-mono text-[9px] text-[#555] uppercase tracking-[0.3em] mb-2">// TECH_USED</div>
+                <div class="flex flex-wrap gap-2">
+                  {exp.tech.map((t) => (
+                    <span class="font-mono text-[10px] uppercase tracking-wider font-bold border border-[#333] text-[#888] bg-[#111] px-2.5 py-1 hover:bg-safety-orange hover:text-black hover:border-safety-orange transition-all duration-0">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      ))}
+
+      <!-- Vertical pipe terminator -->
+      <div class="absolute left-[12px] lg:left-[16px] bottom-[-20px] w-[16px] h-[16px] border-2 border-[#333] bg-black z-10 flex items-center justify-center">
+        <span class="text-[#555] text-[8px] font-mono">×</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- QUEUED_DEPLOYMENTS footer -->
+  <div class="border-t-2 border-[#222] px-6 lg:px-12 py-6">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="font-mono text-[11px]">
+        <span class="text-[#555]">QUEUED_DEPLOYMENTS:</span>
+        <span class="text-safety-orange ml-2" style="text-shadow: 0 0 6px rgba(255,69,0,0.3);">Seeking Cloud Engineering & DevOps roles</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-[10px] text-[#333] uppercase tracking-widest">END_OF_LOG</span>
+        <span class="text-[#333]">|</span>
+        <span class="font-mono text-[10px] text-[#555]">EXIT_CODE:</span>
+        <span class="font-mono text-[10px] text-green-400 font-bold">0</span>
+      </div>
+    </div>
+  </div>
+
 </section>

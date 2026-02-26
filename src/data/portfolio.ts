@@ -1,4 +1,3 @@
-// Placeholder data for portfolio
 export const siteData = {
   name: "SAI SRUJAN",
   title: "Cloud Engineer & DevOps Practitioner",
@@ -9,6 +8,73 @@ export const siteData = {
   coordinates: "17.3850° N, 78.4867° E",
   status: "AVAILABLE FOR WORK"
 };
+
+export const journey = [
+  {
+    version: "0.1.0",
+    codename: "FIRST_BOOT",
+    date: "2022.09",
+    status: "STABLE" as const,
+    signal: "Opened a terminal for the first time in my engineering college. Typed 'ls'. Saw files appear. Felt like a hacker. Installed Ubuntu on a USB drive and broke my bootloader the same week. Fixed it. That's when I knew.",
+    tech: ["Linux", "Terminal", "Ubuntu"],
+  },
+  {
+    version: "0.3.0",
+    codename: "LANGUAGE_ACQUISITION",
+    date: "2023.01",
+    status: "STABLE" as const,
+    signal: "Wrote my first Python script — a calculator that only worked for positive numbers. Spent 3 hours debugging an indentation error. Learned C next because the syllabus said so. Wrote 200 lines to do what Python did in 10. Gained respect for abstraction.",
+    tech: ["Python", "C", "VS Code"],
+  },
+  {
+    version: "0.5.0",
+    codename: "BACKEND_INIT",
+    date: "2023.06",
+    status: "STABLE" as const,
+    signal: "Built my first Flask API. Connected it to MySQL. Deployed it on a free-tier Heroku instance. It crashed during the demo. Learned about environment variables the hard way. Also discovered Git after accidentally deleting a project folder.",
+    tech: ["Flask", "MySQL", "Git", "Heroku"],
+  },
+  {
+    version: "1.0.0",
+    codename: "CLOUD_MIGRATION",
+    date: "2024.03",
+    status: "STABLE" as const,
+    signal: "Discovered AWS. Spun up my first EC2 instance. Forgot to set billing alerts. Got a $47 bill for a t2.micro I left running for a month. Expensive lesson, but now I architect infrastructure for a living. Worth it.",
+    tech: ["AWS", "EC2", "S3", "IAM"],
+  },
+  {
+    version: "1.5.0",
+    codename: "CONTAINERIZED",
+    date: "2024.08",
+    status: "STABLE" as const,
+    signal: "3 AM. Hostel room. 'Why won't this container start?' — spent 4 hours staring at Docker logs. Missing ENV variable. One line. Four hours. I've never forgotten to check .env files since. Also discovered Docker Compose and never looked back.",
+    tech: ["Docker", "Docker Compose", "Nginx"],
+  },
+  {
+    version: "2.0.0",
+    codename: "PIPELINE_ARCHITECT",
+    date: "2025.01",
+    status: "STABLE" as const,
+    signal: "Wrote my first GitHub Actions workflow. Pushed to main. Watched the green checkmarks appear. Automated what used to take 20 minutes of manual deployment. Started terraforming infrastructure instead of clicking through consoles.",
+    tech: ["GitHub Actions", "Terraform", "CI/CD"],
+  },
+  {
+    version: "2.5.0",
+    codename: "CURRENT_BUILD",
+    date: "2025.NOW",
+    status: "IN_DEV" as const,
+    signal: "Learning Kubernetes. Breaking clusters daily. Studying for certifications. Building this portfolio at 2 AM. The grind doesn't stop — it just gets more interesting. Every error message is a lesson I haven't learned yet.",
+    tech: ["Kubernetes", "Ansible", "Prometheus"],
+  },
+  {
+    version: "3.0.0",
+    codename: "UNRELEASED",
+    date: "NEXT",
+    status: "PLANNED" as const,
+    signal: "CKA certified. Full-stack cloud architect. Contributing to infrastructure that serves millions. The blueprint is drawn — now it's about execution.",
+    tech: ["CKA", "AWS SA", "System Design"],
+  },
+];
 
 export const projects = [
   {
@@ -90,26 +156,51 @@ export const capabilities = [
 
 export const experience = [
   {
-    title: "Senior Full-Stack Developer",
-    company: "Tech Innovations Inc.",
-    period: "2023 - Present",
-    location: "San Francisco, CA",
-    description: "Leading development of cloud-based SaaS products serving 50K+ users."
+    hash: "f7a2b3c",
+    deploymentId: "01",
+    title: "Cloud Engineering Intern",
+    company: "NexaByte Solutions",
+    period: "Jun 2025 – Present",
+    location: "Hyderabad, India",
+    status: "ACTIVE" as const,
+    description: [
+      "Provisioned and managed AWS EC2, S3, and VPC infrastructure for staging environments",
+      "Automated CI/CD pipelines with GitHub Actions, reducing deployment time by 40%",
+      "Containerized microservices with Docker and Docker Compose for development workflows",
+      "Monitored system health using CloudWatch dashboards and custom alarms",
+    ],
+    tech: ["AWS", "Docker", "GitHub Actions", "Terraform", "Linux"],
   },
   {
-    title: "Full-Stack Developer",
-    company: "Digital Solutions Co.",
-    period: "2021 - 2023",
+    hash: "b4e9d1a",
+    deploymentId: "02",
+    title: "Open Source Contributor",
+    company: "Various Projects",
+    period: "Jan 2025 – May 2025",
     location: "Remote",
-    description: "Built and maintained multiple client projects using modern JavaScript stack."
+    status: "COMPLETED" as const,
+    description: [
+      "Contributed Docker support and CI/CD workflows to community repositories",
+      "Authored pull requests with detailed documentation and testing strategies",
+      "Collaborated asynchronously with maintainers across multiple time zones",
+    ],
+    tech: ["Git", "Docker", "Python", "Bash", "GitHub"],
   },
   {
-    title: "Frontend Developer",
-    company: "Startup Studio",
-    period: "2019 - 2021",
-    location: "New York, NY",
-    description: "Developed responsive web applications and design systems."
-  }
+    hash: "c8f3e2b",
+    deploymentId: "03",
+    title: "Freelance DevOps Consultant",
+    company: "Self-Employed",
+    period: "Aug 2024 – Dec 2024",
+    location: "Remote",
+    status: "COMPLETED" as const,
+    description: [
+      "Set up cloud infrastructure on AWS for small SaaS startups",
+      "Configured Nginx reverse proxies, SSL certificates, and firewall rules",
+      "Implemented automated backup systems and monitoring dashboards",
+    ],
+    tech: ["AWS", "Nginx", "Linux", "Bash", "Cloudflare"],
+  },
 ];
 
 export const socialLinks = [

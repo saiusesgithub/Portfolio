@@ -1,7 +1,16 @@
+sections to add - 
+small About Me section 
+education 
+
+GIT STATS
+
+proper icons in skills section 
+certifications / achievements?? (all those badges??)
+
+
 # AURA PORTFOLIO — IMPLEMENTATION IDEAS ROADMAP
 Industrial Brutalist Interactive Portfolio Enhancement Plan
 
-GIT STATS
 
 ---
 

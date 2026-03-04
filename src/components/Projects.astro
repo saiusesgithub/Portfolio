@@ -1,0 +1,282 @@
+---
+import { projects } from '../data/portfolio';
+
+// ── Fetch GitHub stats at build time ──────────────
+interface GitHubStats {
+  commits: number;
+  language: string;
+  size: string;
+}
+
+async function fetchGitHubStats(repo: string): Promise<GitHubStats | null> {
+  try {
+    const repoRes = await fetch(`https://api.github.com/repos/${repo}`, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' },
+    });
+    if (!repoRes.ok) return null;
+    const data = await repoRes.json();
+
+    // Get commit count from contributors endpoint
+    let commits = 0;
+    try {
+      const contribRes = await fetch(`https://api.github.com/repos/${repo}/contributors?per_page=100`, {
+        headers: { 'Accept': 'application/vnd.github.v3+json' },
+      });
+      if (contribRes.ok) {
+        const contributors = await contribRes.json();
+        if (Array.isArray(contributors)) {
+          commits = contributors.reduce((sum: number, c: any) => sum + (c.contributions || 0), 0);
+        }
+      }
+    } catch { commits = 0; }
+
+    const sizeKb = data.size || 0;
+    const sizeStr = sizeKb > 1024 ? `${(sizeKb / 1024).toFixed(1)} MB` : `${sizeKb} KB`;
+
+    return {
+      commits,
+      language: data.language || 'Unknown',
+      size: sizeStr,
+    };
+  } catch {
+    return null;
+  }
+}
+
+// Fetch all stats in parallel
+const statsMap = new Map<string, GitHubStats | null>();
+await Promise.all(
+  projects.map(async (p) => {
+    if (p.githubRepo) {
+      const stats = await fetchGitHubStats(p.githubRepo);
+      statsMap.set(p.githubRepo, stats);
+    }
+  })
+);
+---
+
+<section id="projects" class="w-full bg-white relative overflow-hidden">
+
+  <!-- Caution tape -->
+  <div class="w-full h-4 bg-[repeating-linear-gradient(45deg,#fff,#fff_10px,#ff4500_10px,#ff4500_20px)] border-b-4 border-black"></div>
+
+  <!-- Section Header -->
+  <div class="px-6 lg:px-12 pt-10 pb-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="font-mono text-[11px] text-[#999] mb-4">
+        <span class="text-safety-orange">▸</span>
+        <span> $ ls -la /projects/ --classified</span>
+      </div>
+
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 border-b-4 border-black pb-8">
+        <div>
+          <div class="font-tech text-[10px] text-[#999] uppercase tracking-[0.3em] mb-3">// FEATURED_BUILDS</div>
+          <h2 class="text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.85] text-black" style="text-shadow: -3px 3px 0 #ff4500;">
+            PROJECT<br />INDEX<span class="text-safety-orange">_</span>
+          </h2>
+        </div>
+        <div class="flex flex-col gap-1 lg:items-end font-tech text-[10px] uppercase tracking-widest">
+          <div>
+            <span class="text-[#999]">CLEARANCE:</span>
+            <span class="text-safety-orange font-bold ml-1">PUBLIC</span>
+            <span class="text-[#ccc] mx-2">|</span>
+            <span class="text-[#999]">STATUS:</span>
+            <span class="text-green-600 font-bold ml-1">OPEN_SOURCE</span>
+          </div>
+          <div class="text-[#bbb]">
+            SORTED BY: DATE_DESC &nbsp;|&nbsp; FORMAT: SPEC_SHEET
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Cards -->
+  <div class="px-6 lg:px-12 pb-12">
+    <div class="max-w-6xl mx-auto flex flex-col gap-12">
+
+      {projects.map((project, idx) => {
+        const stats = project.githubRepo ? statsMap.get(project.githubRepo) : null;
+        const isEven = idx % 2 === 0;
+        const isActive = project.status === 'IN_DEV';
+
+        return (
+          <div class="group relative">
+
+            {/* File index tab */}
+            <div class={`absolute -top-5 ${isEven ? 'left-6' : 'right-6'} border-4 border-black bg-safety-orange px-4 py-1 font-black text-xl text-black shadow-[4px_4px_0_0_#000] z-20 group-hover:-translate-y-1 transition-transform`}>
+              {project.fileId}
+            </div>
+
+            {/* Main card */}
+            <div class={`border-4 ${isActive ? 'border-safety-orange' : 'border-black'} bg-white shadow-[8px_8px_0_0_#000] hover:shadow-[12px_12px_0_0_#ff4500] hover:-translate-x-1 hover:-translate-y-1 transition-all duration-100 relative overflow-hidden`}>
+
+              {/* Top status bar */}
+              <div class="px-4 lg:px-6 py-2 border-b-3 border-black bg-gray-50 flex flex-wrap items-center justify-between gap-2" style="border-bottom-width: 3px;">
+                <div class="flex items-center gap-3 font-mono text-[10px]">
+                  <span class="text-[#999]">FILE:</span>
+                  <span class="text-black font-bold uppercase">{project.codename}</span>
+                  <span class="text-[#ccc]">|</span>
+                  <span class="text-[#999]">TYPE:</span>
+                  <span class="text-black">{project.type}</span>
+                  <span class="text-[#ccc]">|</span>
+                  <span class="text-[#999]">ARCH:</span>
+                  <span class="text-black">{project.architecture}</span>
+                </div>
+                <div class={`flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 border-2 ${
+                  isActive
+                    ? 'border-safety-orange text-safety-orange'
+                    : 'border-black text-black'
+                }`}>
+                  <span class={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-safety-orange animate-pulse' : 'bg-green-500'}`}></span>
+                  {project.status === 'IN_DEV' ? 'IN_DEV' : 'DEPLOYED'}
+                </div>
+              </div>
+
+              {/* Content: Image + Info split */}
+              <div class={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}>
+
+                {/* Image panel — compact */}
+                <div class={`relative w-full lg:w-2/5 h-[220px] lg:h-auto lg:min-h-[340px] overflow-hidden border-b-3 lg:border-b-0 ${isEven ? 'lg:border-r-3' : 'lg:border-l-3'} border-black`} style="border-width: 0; border-bottom-width: 3px;">
+                  <div
+                    class="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100"
+                    style={`background-image: url('${project.image}');`}
+                  ></div>
+                  {/* Scanline overlay */}
+                  <div class="absolute inset-0 pointer-events-none bg-[repeating-linear-gradient(transparent,transparent_2px,rgba(0,0,0,0.03)_2px,rgba(0,0,0,0.03)_4px)]"></div>
+                  {/* Year stamp  */}
+                  <div class="absolute top-3 left-3 border-2 border-black bg-white px-2.5 py-1 font-black text-[12px] text-black shadow-[2px_2px_0_0_#ff4500]">
+                    {project.year}
+                  </div>
+                </div>
+
+                {/* Info panel */}
+                <div class="w-full lg:w-3/5 p-5 lg:p-6 flex flex-col justify-between">
+
+                  {/* Title */}
+                  <div>
+                    <h3 class="text-2xl lg:text-3xl font-black uppercase tracking-tight text-black leading-none mb-3 group-hover:text-safety-orange transition-colors duration-100">
+                      {project.title}
+                    </h3>
+
+                    <p class="text-[13px] leading-relaxed text-[#555] mb-5 border-l-4 border-safety-orange pl-4">
+                      {project.description}
+                    </p>
+
+                    {/* Tech stack */}
+                    <div class="mb-4">
+                      <div class="font-mono text-[9px] text-[#bbb] uppercase tracking-[0.3em] mb-2">// TECH_STACK</div>
+                      <div class="flex flex-wrap gap-1.5">
+                        {project.tags.map((tag) => (
+                          <span class="font-mono text-[10px] uppercase tracking-wider font-bold border-2 border-black text-black bg-white px-2 py-0.5 hover:bg-black hover:text-white transition-all duration-0">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* What I learned */}
+                    <div class="mb-4">
+                      <div class="font-mono text-[9px] text-[#bbb] uppercase tracking-[0.3em] mb-2">// LESSONS_LEARNED</div>
+                      <div class="font-mono text-[11px] text-[#666] flex flex-col gap-1">
+                        {project.learnings.map((line, i) => (
+                          <div class="flex items-start gap-2">
+                            <span class="text-[#ccc] shrink-0 select-none">
+                              {i < project.learnings.length - 1 ? '├──' : '└──'}
+                            </span>
+                            <span>{line}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom: Metrics + Links */}
+                  <div>
+                    {/* GitHub Metrics */}
+                    {stats && (
+                      <div class="border-2 border-black bg-gray-50 p-2.5 mb-4">
+                        <div class="flex flex-wrap gap-4 font-mono text-[11px]">
+                          <div>
+                            <span class="text-[#999]">COMMITS:</span>
+                            <span class="text-black font-bold ml-1">{stats.commits}</span>
+                          </div>
+                          <div>
+                            <span class="text-[#999]">LANG:</span>
+                            <span class="text-black font-bold ml-1">{stats.language}</span>
+                          </div>
+                          <div>
+                            <span class="text-[#999]">SIZE:</span>
+                            <span class="text-black font-bold ml-1">{stats.size}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action buttons */}
+                    <div class="flex flex-wrap gap-3">
+                      {project.links.live && project.links.live !== '#' && (
+                        <a href={project.links.live} target="_blank" rel="noopener" class="flex items-center gap-2 border-3 border-black bg-black text-white font-mono text-[11px] uppercase tracking-widest px-5 py-2.5 shadow-[4px_4px_0_0_#ff4500] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-0" style="border-width: 3px;">
+                          <span class="text-safety-orange">▸</span> VIEW_LIVE
+                        </a>
+                      )}
+                      {project.links.github && (
+                        <a href={project.links.github} target="_blank" rel="noopener" class="flex items-center gap-2 border-3 border-black bg-white text-black font-mono text-[11px] uppercase tracking-widest px-5 py-2.5 shadow-[4px_4px_0_0_#000] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-0" style="border-width: 3px;">
+                          <span class="text-safety-orange">▸</span> SOURCE_CODE
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Coming Soon ghost card */}
+      <div class="relative">
+        <div class="absolute -top-5 left-6 border-4 border-dashed border-[#ccc] bg-white px-4 py-1 font-black text-xl text-[#ccc] z-20">
+          PRJ_{String(projects.length + 1).padStart(3, '0')}
+        </div>
+        <div class="border-4 border-dashed border-[#ddd] bg-gray-50 p-8 lg:p-12 flex flex-col items-center justify-center text-center min-h-[200px]">
+          <div class="font-mono text-[40px] text-[#ddd] mb-4">{ }</div>
+          <div class="font-mono text-[12px] text-[#bbb] uppercase tracking-widest mb-2">// INITIALIZING...</div>
+          <div class="font-mono text-[11px] text-[#ccc]">Next project is in the pipeline. Stay tuned.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- View all + bottom bar -->
+  <div class="border-t-4 border-black px-6 lg:px-12 py-6">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <a href="https://github.com/saiusesgithub?tab=repositories" target="_blank" rel="noopener" class="inline-flex items-center gap-2 border-3 border-black bg-black text-white font-mono text-[11px] uppercase tracking-widest px-6 py-3 shadow-[4px_4px_0_0_#ff4500] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-0" style="border-width: 3px;">
+        <span class="text-safety-orange">▸</span> VIEW ALL PROJECTS ON GITHUB
+      </a>
+      <div class="font-mono text-[10px] text-[#bbb] uppercase tracking-widest">
+        // all projects are open source
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<style is:global>
+  /* Fix the lg border for image panel split */
+  @media (min-width: 1024px) {
+    .lg\:border-r-3 {
+      border-right-width: 3px !important;
+      border-right-style: solid !important;
+      border-right-color: #000 !important;
+    }
+    .lg\:border-l-3 {
+      border-left-width: 3px !important;
+      border-left-style: solid !important;
+      border-left-color: #000 !important;
+    }
+  }
+</style>

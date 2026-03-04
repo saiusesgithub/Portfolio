@@ -79,43 +79,64 @@ export const journey = [
 export const projects = [
   {
     id: 1,
-    title: "FinTech Dashboard",
+    fileId: "PRJ_001",
+    title: "GrindMap",
+    codename: "GRINDMAP",
     year: "2025",
-    description: "Real-time financial analytics platform handling 100K+ daily transactions",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-    tags: ["React", "Node.js", "PostgreSQL"],
-    links: {
-      live: "#",
-      github: "#",
-      case: "#"
-    }
+    status: "DEPLOYED" as const,
+    type: "FULL_STACK",
+    architecture: "MONOLITH",
+    description: "Competitive programming profile tracker that aggregates stats from LeetCode, Codeforces, and HackerEarth into a single dashboard. Features real-time rating tracking, progress visualization, and heatmaps.",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop",
+    tags: ["React", "Node.js", "Express", "MongoDB"],
+    learnings: [
+      "Built a web scraper that handles rate limiting and CAPTCHAs",
+      "Learned the pain of API inconsistency across different platforms",
+      "Implemented real-time data sync without WebSockets (polling with smart caching)",
+    ],
+    links: { live: "#", github: "https://github.com/saiusesgithub/GrindMap" },
+    githubRepo: "saiusesgithub/GrindMap",
   },
   {
     id: 2,
-    title: "E-Commerce Platform",
-    year: "2024",
-    description: "Headless commerce solution with custom CMS and payment integration",
-    image: "https://images.unsplash.com/photo-1661956602116-aa6865609028?q=80&w=2070&auto=format&fit=crop",
-    tags: ["Next.js", "Stripe", "Sanity CMS"],
-    links: {
-      live: "#",
-      github: "#",
-      case: "#"
-    }
+    fileId: "PRJ_002",
+    title: "Portfolio V2",
+    codename: "PORTFOLIO",
+    year: "2025",
+    status: "IN_DEV" as const,
+    type: "FRONTEND",
+    architecture: "STATIC_SSG",
+    description: "This site. A neo-brutalist portfolio built with Astro, GSAP, and raw CSS. Features an interactive terminal, boot sequence preloader, custom crosshair cursor, and enough hard shadows to cast shade on every generic portfolio out there.",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    tags: ["Astro", "GSAP", "TailwindCSS", "TypeScript"],
+    learnings: [
+      "Discovered that neo-brutalism is just making everything look angry",
+      "GSAP timelines are powerful but debugging them feels like time travel",
+      "Building for aesthetics AND performance is a constant negotiation",
+    ],
+    links: { live: "#", github: "https://github.com/saiusesgithub/Portfolio" },
+    githubRepo: "saiusesgithub/Portfolio",
   },
   {
     id: 3,
-    title: "SaaS Analytics Tool",
+    fileId: "PRJ_003",
+    title: "Cloud Infra Labs",
+    codename: "INFRA_LABS",
     year: "2024",
-    description: "Multi-tenant analytics dashboard with real-time data visualization",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop",
-    tags: ["Vue.js", "Python", "AWS"],
-    links: {
-      live: "#",
-      github: "#",
-      case: "#"
-    }
-  }
+    status: "DEPLOYED" as const,
+    type: "INFRASTRUCTURE",
+    architecture: "MULTI_SERVICE",
+    description: "Collection of AWS infrastructure experiments — VPC designs, EC2 auto-scaling groups, S3 static hosting, Lambda functions, and Terraform IaC templates. My personal cloud playground.",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
+    tags: ["AWS", "Terraform", "Docker", "Linux"],
+    learnings: [
+      "Forgot billing alerts once. Got a $47 surprise. Never again.",
+      "Terraform destroy is both the most powerful and most terrifying command",
+      "Infrastructure as code means your bugs are also committed to git",
+    ],
+    links: { github: "https://github.com/saiusesgithub/cloud-infra-labs" },
+    githubRepo: "saiusesgithub/cloud-infra-labs",
+  },
 ];
 
 export const techStack = [
@@ -145,13 +166,6 @@ export const skills = [
     icon: "palette",
     description: "Creating intuitive user experiences with Figma. From wireframes to high-fidelity prototypes and design systems."
   }
-];
-
-export const capabilities = [
-  { spec: "01", title: "Languages", value: "JavaScript, TypeScript, Python, SQL" },
-  { spec: "02", title: "Frameworks", value: "React, Next.js, Vue, Node.js, Express" },
-  { spec: "03", title: "Databases", value: "PostgreSQL, MongoDB, Redis, Firebase" },
-  { spec: "04", title: "DevOps", value: "AWS, Docker, CI/CD, Linux, Nginx" }
 ];
 
 export const experience = [

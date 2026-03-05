@@ -5,6 +5,14 @@ terraform {
       version = "~> 6.0"
     }
   }
+
+  backend "s3" {
+    bucket         = "saisrujan-portfolio-terraform-remote-backend-bucket"
+    key            = "portfolio/terraform.tfstate"
+    region         = "ap-south-2"
+    dynamodb_table = "portfolio-terraform-state-locking"
+    encrypt        = true
+  }
 }
 
 provider "aws" {

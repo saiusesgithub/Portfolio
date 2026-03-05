@@ -1,11 +1,11 @@
 resource "aws_instance" "nginx_server" {
-  ami           = "ami-0fb67e6212e8ff822"
-  instance_type = "t3.micro"
+  ami           = var.ami_id
+  instance_type = var.instance_type
 
   tags = {
     Name = "Portfolio"
   }
-  key_name = "portfolio-terraform-key"
+  key_name               = "portfolio-terraform-key"
   vpc_security_group_ids = [aws_security_group.portfolio_security_group.id]
 
   user_data = <<-EOF

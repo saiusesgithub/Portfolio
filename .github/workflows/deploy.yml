@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull saiusesdocker/portfolio:latest
-            docker stop portfolio || true
-            docker rm portfolio || true
-            docker run -d --name portfolio -p 80:80 --restart unless-stopped saiusesdocker/portfolio:latest
+            sudo docker pull saiusesdocker/portfolio:latest
+            sudo docker stop portfolio || true
+            sudo docker rm portfolio || true
+            sudo docker run -d --name portfolio -p 80:80 --restart unless-stopped saiusesdocker/portfolio:latest

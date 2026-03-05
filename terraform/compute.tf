@@ -14,12 +14,10 @@ resource "aws_instance" "nginx_server" {
     sudo apt install docker.io -y
     sudo systemctl start docker
     sudo systemctl enable docker
-    sudo docker pull saiusesdocker/portfolio
-    sudo docker run -d -p 80:80 saiusesdocker/portfolio
   EOF
 }
 
 resource "aws_eip" "public_ip" {
   instance = aws_instance.nginx_server.id
   domain   = "vpc"
-}
+} 

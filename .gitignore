@@ -44,3 +44,4 @@ pnpm-debug.log*
 # terraform state files
 *.tfstate
 .tfstate.
+terraform/terraform.tfstate.backup

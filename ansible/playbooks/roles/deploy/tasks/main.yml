@@ -1,0 +1,8 @@
+- name: Pull portfolio image
+  docker_container:
+    name: portfolio
+    image: saiusesdocker/portfolio:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "80:80"

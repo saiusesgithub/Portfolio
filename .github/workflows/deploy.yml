@@ -16,22 +16,45 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-
       - name: Build Docker image
         run: docker build -f docker/Dockerfile -t saiusesdocker/portfolio:latest .
       
-
       - name: Push Docker image
         run: docker push saiusesdocker/portfolio:latest
 
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo docker pull saiusesdocker/portfolio:latest
-            sudo docker stop portfolio || true
-            sudo docker rm portfolio || true
-            sudo docker run -d --name portfolio -p 80:80 --restart unless-stopped saiusesdocker/portfolio:latest
+      - name: Set up Ansible
+        run: |
+          sudo apt update
+          sudo apt install ansible -y
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key.pem
+          chmod 400 ~/.ssh/ec2_key.pem
+
+      # - name: Deploy to EC2
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USER }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       sudo docker pull saiusesdocker/portfolio:latest
+      #       sudo docker stop portfolio || true
+      #       sudo docker rm portfolio || true
+      #       sudo docker run -d --name portfolio -p 80:80 --restart unless-stopped saiusesdocker/portfolio:latest
+
+      # - name: Deploy to EC2 using Ansible
+      #   uses: dawidd6/action-ansible-playbook@v2
+      #   with:
+      #     playbook: ansible/playbooks/deploy.yml
+      #     inventory: ansible/inventory/hosts.ini
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     user: ${{ secrets.EC2_USER }}
+      #     host: ${{ secrets.EC2_HOST }}
+
+
+      - name: Run Ansible
+        run: |
+          ansible-playbook -i ansible/inventory ansible/playbooks/deploy.yml

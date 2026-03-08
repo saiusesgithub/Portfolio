@@ -4,5 +4,7 @@
     image: saiusesdocker/portfolio:latest
     state: started
     restart_policy: unless-stopped
+    pull: yes
+    recreate: yes
     ports:
       - "80:80"

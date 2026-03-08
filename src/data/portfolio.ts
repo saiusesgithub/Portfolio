@@ -32,7 +32,7 @@ export const journey = [
     date: "2023.06",
     status: "STABLE" as const,
     signal: "Built my first Flask API. Connected it to MySQL. Deployed it on a free-tier Heroku instance. It crashed during the demo. Learned about environment variables the hard way. Also discovered Git after accidentally deleting a project folder.",
-    tech: ["Flask", "MySQL", "Git", "Heroku"],
+    tech: ["Flask", "MySQL", "Git", "FastAPI"],
   },
   {
     version: "1.0.0",

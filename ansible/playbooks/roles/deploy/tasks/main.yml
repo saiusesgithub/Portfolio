@@ -1,10 +1,14 @@
-- name: Pull portfolio image
+- name: Remove old container
+  docker_container:
+    name: portfolio
+    state: absent
+
+- name: Run portfolio container
   docker_container:
     name: portfolio
     image: saiusesdocker/portfolio:latest
     state: started
-    restart_policy: unless-stopped
     pull: yes
-    recreate: yes
+    restart_policy: unless-stopped
     ports:
       - "80:80"
